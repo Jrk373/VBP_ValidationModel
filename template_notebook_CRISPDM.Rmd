@@ -1,0 +1,140 @@
+---
+title: "Notebook: FUH Validation"
+subtitle: Data Workflows and Methodology
+author: John Ryan Kivela, MA
+output: 
+  html_notebook:
+    code_folding: hide
+    theme: cerulean
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    toc_collapsed: false
+---
+
+# Introduction
+
+## Purpose
+
+The purpose of this notebook is to...
+
+This notebook is the primary source for scripts.
+
+# Overview
+
+
+# Method
+
+***Data Mining using CRISP-DM***
+
+The CRISP-DM process for data mining was used for this project.
+
+## Business Understanding
+
+### Clear Understanding of business objective
+
+
+### Success Criteria
+
+
+### Situation Assessment
+
+
+### Translate to analytical objectives (Determine Project Goals)
+
+
+### Clearly understand how action can be taken based on outcomes
+
+
+### Identify the Business Problem
+
+
+## Data Understanding
+
+
+### Identify data sources
+
+
+### What are the formats?
+
+
+### Key fieldnames and targets
+
+
+## Data quality
+
+
+## Data Preparation
+
+### r Setup
+
+The following setup, libraries, and packages were loaded.
+
+```{r setup, include=TRUE, echo=FALSE, warning=FALSE, message=FALSE}
+# Set up knitting options for markdown file
+knitr::opts_chunk$set(echo = TRUE)
+
+# Set number of digits to display exponential numbers
+options(scipen = 999, 
+        show.signif.stars = TRUE)
+
+# Load Packages and libraries
+library(tidyverse)
+library(readxl)
+
+```
+
+### Data 1
+
+The following SQL query was executed:
+
+```{sql SQL_GlobalMembers, echo=TRUE, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+
+```
+
+The resulting solution is saved as a CSV here:
+
+
+The raw data files are loaded as indicated below
+```{r Data_Load1, ECHO=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+# Load data
+
+```
+
+### Data 2
+
+### Reference Objects
+
+Several reference objects and data frames were created to provide parameters for determining active membership.
+
+```{r Objects_ForAll, ECHO=TRUE, message=FALSE, warning=FALSE}
+# Create common objects for all
+
+```
+
+## Modeling
+
+
+### Select Modeling Techniques
+
+
+### Generate Test Design
+
+
+### Build Model
+
+
+### Assess Model
+
+
+## Evaluation
+
+
+### Eval 1
+
+
+### Eval 2
+
+
+### Eval 3
