@@ -1,0 +1,25 @@
+So this is the folder that houses the materials for the PowerBI dashboards.
+
+But, which files to use for what?
+
+What do we need?
+
+1. Dashboard for the VBP QR results
+	a. Shows compliance percentage - VBP_RepCombValidation
+	b. Shows proportions of eligibles
+	c. Generates gap list 
+
+2. Member list for inpatient claims
+	a. IP Claims summary
+
+3. VBP > Claims validation match
+	a. data_cat_2023-11-30_validationMatrix
+
+4. VBP > Claims Validation Match + Recombine with ALL potential inpatient claims
+	a. data_eval_ValMat_All.csv
+	b. Then, to recombine a compliance indicator
+		1. Using the "Compliance" table,
+			a. create an indicator for Yes/No/Both for each measure
+				1. Maybe "Is FUH7 Compiant", etc.
+
+Need to diversify the outputs folder

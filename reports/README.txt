@@ -4,3 +4,12 @@ This includes:
 - Markdown html, pdf, or Word documents
 - FlexDashboards
 - Notebooks
+
+
+Style for table things
+
+They are similar. Data frames are lists of vectors of equal length while data tables (data.table) is an inheritance of data frames. Therefore data tables are data frames but data frames are not necessarily data tables. 
+
+File: bold
+Table: bold, italic
+Object/variable: italic
