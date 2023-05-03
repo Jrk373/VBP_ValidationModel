@@ -150,14 +150,15 @@ The most recent Value-based Purchasing (VBP) Report ***(Report Date = 2023-03-23
 
 ```{r data_read_VBPQR, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # Import the unaltered VBP report, "Detail" sheet, as received from HCA
-vbp_cbi   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-03-23_94-2880847_Community_Bridges_HCA_BHH_VBP_Quality.xlsx", sheet = "Detail")
-vbp_cpih  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-03-23_86-0215065_Change_Point_Integrated_Health_HCA_BHH_VBP_Quality.xlsx", sheet = "Detail")
-vbp_lcbhc <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-03-23_86-0250938_Little_Colorado_Behavioral_Health_HCA_BHH_VBP_Quality.xlsx", sheet = "Detail")
-vbp_mmhc  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-03-23_86-0214457_Mohave_Mental_Health_HCA_BHH_VBP_Quality.xlsx", sheet = "Detail")
-vbp_ph    <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-03-23_86-0206928_Polara_Health_HCA_BHH_VBP_Quality.xlsx", sheet = "Detail")
-vbp_sbhs  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-03-23_86-0290033_Southwest_Behavioral_Health_HCA_BHH_VBP_Quality.xlsx", sheet = "Detail")
-vbp_shg   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-03-23_86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality.xlsx", sheet = "Detail")
-vbp_tgc   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-03-23_86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality.xlsx", sheet = "Detail")
+vbp_cbi   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_94-2880847_Community_Bridges_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+# 5/1/23 sheet = "Detail" was change by HCA to sheet = "Roster"
+vbp_cpih  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0215065_Change_Point_Integrated_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_lcbhc <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0250938_Little_Colorado_Behavioral_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_mmhc  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0214457_Mohave_Mental_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_ph    <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0206928_Polara_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_sbhs  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0290033_Southwest_Behavioral_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_shg   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_tgc   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 
 # Bind the Details sheet from all providers into one table
 Master_VBP_Rep_Comb <- rbind(
@@ -171,7 +172,7 @@ Master_VBP_Rep_Comb <- rbind(
   vbp_tgc
 )
 # date of file = date of VBP QR report
-write.csv(Master_VBP_Rep_Comb, "./data/output/VBPMeasurementValidation/2023-03-23_Master_VBP_Rep_Comb.csv")
+write.csv(Master_VBP_Rep_Comb, "./data/output/VBPMeasurementValidation/2023-04-27_Master_VBP_Rep_Comb.csv")
 ```
 
 The Table, ***Master_VBP_Rep_Comb,*** is then transformed in order to remove superfluous white space and other text and table titles that were imported by default. The key transformations are:
@@ -195,17 +196,28 @@ The resulting table is a complete, cleaned list of all of the individual member 
 ```{r transform_MasterVBP, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # create a safe copy of the original data
 VBP_Rep_Comb_validation <- Master_VBP_Rep_Comb
-# Set column names to headers, which get imported on row 6
-colnames(VBP_Rep_Comb_validation) <- VBP_Rep_Comb_validation [6,] 
+
 # Filter out superfluous rows of nonsense data
 VBP_Rep_Comb_validation <- VBP_Rep_Comb_validation %>%  
-  filter(LOB == "HCA")
-# set date format for report date
-VBP_Rep_Comb_validation$`Data Period` <- as.numeric(VBP_Rep_Comb_validation$`Data Period`)
-VBP_Rep_Comb_validation$`Data Period` <- as.Date(VBP_Rep_Comb_validation$`Data Period`, origin = "1899-12-30")
-# update data types
-VBP_Rep_Comb_validation$Numerator <- as.numeric(VBP_Rep_Comb_validation$Numerator)
-VBP_Rep_Comb_validation$TotalEligible <- as.numeric(VBP_Rep_Comb_validation$Denominator)
+  filter(`...2` != "NA")
+
+# Set column names to headers, which get imported on row 1 #5/2/23 - updated from "6" 
+colnames(VBP_Rep_Comb_validation) <- VBP_Rep_Comb_validation [1,] 
+
+# Remove the first row of data that hheaders
+VBP_Rep_Comb_validation <- VBP_Rep_Comb_validation[-1,]
+
+# 5/1/23 - Create SubMeasureID
+VBP_Rep_Comb_validation$`SubMeasure ID` <- substr(VBP_Rep_Comb_validation$Measure, 1, 3)
+
+
+
+# # set date format for report date
+# VBP_Rep_Comb_validation$`Data Period` <- as.numeric(VBP_Rep_Comb_validation$`Data Period`)
+# VBP_Rep_Comb_validation$`Data Period` <- as.Date(VBP_Rep_Comb_validation$`Data Period`, origin = "1899-12-30")
+# # update data types
+# VBP_Rep_Comb_validation$Numerator <- as.numeric(VBP_Rep_Comb_validation$Numerator)
+# VBP_Rep_Comb_validation$TotalEligible <- as.numeric(VBP_Rep_Comb_validation$Denominator)
 ```
 
 The data in the variable *Health Home Name* was used to create a new vector of names called *Provider_Shortname*, and then filtered to only include Alliance Providers (CBI, CPIH, EHS, LCBHC, MMHC, Polara, SBHS, SHG, TGC).
@@ -217,30 +229,30 @@ Finally, the *SubMeasureID* variable was filtered to only include the *FUH7* mea
 ```{r transform_MasterVBP2, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # Create a Provider Shortname
 VBP_Rep_Comb_validation <- VBP_Rep_Comb_validation %>% 
-  mutate(Provider_Shortname = ifelse(`Health Home Name` == "COMMUNITY BRIDGES", "CBI",
-            ifelse(`Health Home Name` == "CHANGE POINT INTEGRATED HEALTH", "CPIH", 
-                   ifelse(`Health Home Name` == "LITTLE COLORADO BEHAVIORAL HEALTH", "LCBHC", 
-                          ifelse(`Health Home Name` == "MOHAVE MENTAL HEALTH", "MMHC", 
-                                 ifelse(`Health Home Name` == "POLARA HEALTH", "PH", 
-                                        ifelse(`Health Home Name` == "SOUTHWEST BEHAVIORAL HEALTH", "SBHS", 
-                                               ifelse(`Health Home Name` == "SPECTRUM HEALTH GROUP", "SHG",
-                                                      ifelse(`Health Home Name` == "THE GUIDANCE CENTER", "TGC", NA
+  mutate(Provider_Shortname = ifelse(`Health Home TIN & Name` == "94-2880847 - COMMUNITY BRIDGES", "CBI",
+            ifelse(`Health Home TIN & Name` == "86-0215065 - CHANGE POINT INTEGRATED HEALTH", "CPIH", 
+                   ifelse(`Health Home TIN & Name` == "86-0250938 - LITTLE COLORADO BEHAVIORAL HEALTH", "LCBHC", 
+                          ifelse(`Health Home TIN & Name` == "86-0214457 - MOHAVE MENTAL HEALTH", "MMHC", 
+                                 ifelse(`Health Home TIN & Name` == "86-0206928 - POLARA HEALTH", "PH", 
+                                        ifelse(`Health Home TIN & Name` == "86-0290033 - SOUTHWEST BEHAVIORAL HEALTH", "SBHS", 
+                                               ifelse(`Health Home TIN & Name` == "86-0207499 - SPECTRUM HEALTH GROUP", "SHG",
+                                                      ifelse(`Health Home TIN & Name` == "86-0223720 - THE GUIDANCE CENTER", "TGC", NA
         ))))))))) %>% 
   drop_na(Provider_Shortname)
 
-write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_Rep_Comb_validation_complete_2023-03-23.csv")
+write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_Rep_Comb_validation_complete_2023-04-27.csv")
 ```
 
 ```{r transform_MasterVBP3, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # create a duplicate at this phase to be used in later evaluation
 VBP_Rep_Comb_eval <- VBP_Rep_Comb_validation %>% 
-  filter(`SubMeasure ID` == "FUH7")
+  filter(`SubMeasure ID` == "FUH")
 
 write.csv(VBP_Rep_Comb_eval, "./data/output/VBPMeasurementValidation/VBP_Rep_Comb_Eval.csv")
 
 # Isolate member ID for the validation
 VBP_Rep_Comb_validation <- VBP_Rep_Comb_validation %>% 
-  filter(`SubMeasure ID` == "FUH7") %>% 
+  filter(`SubMeasure ID` == "FUH") %>% 
   select(`Member ID`)
 
 write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_Validation.csv")
@@ -249,14 +261,17 @@ write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_V
 
 ### Health Choice Adjudicated Claims
 
-Claims data was extracted from the Health Choice data warehouse for the period of ***2022-01-01 to 2022-11-30***, meaning claims adjudicated through 11-30-2023 in order to be consistent with the VBP Quality Report date ranges. This data includes adjudicated claims for members of the Norther GSA, ACC health plan, in other words, Alliance Members.
+Claims data was extracted from the Health Choice data warehouse for the period of ***2023-01-01 to 2022-04-27***, meaning claims adjudicated through 11-30-2023 in order to be consistent with the VBP Quality Report date ranges. This data includes adjudicated claims for members of the Norther GSA, ACC health plan, in other words, Alliance Members.
 
-The resulting solution is exported to .csv and saved as: **(./data/data_original_cat_2022-11-30_IPClaims)**. The IP Claims data is loaded to the model for analysis. In addition, a data frame was loaded that contains the HEDIS My2022 eligible ICD10 diagnoses for the FUH7 measure.
+The resulting solution is exported to .csv and saved as: **(./data/data_original_cat_2022-05-01_IPClaims)**. The IP Claims data is loaded to the model for analysis. In addition, a data frame was loaded that contains the HEDIS My2022 eligible ICD10 diagnoses for the FUH7 measure.
 
 ```{r SQL, eval=FALSE, include=FALSE, echo=TRUE, warning=FALSE, message=FALSE}
+-- This is the code to extract IP Claims data from the HCA data warehouse
+-- Updated 5/2/23 by JRK
+
 -- Declare Date Range
-Declare @start as date = '01-01-2022'
-Declare @end as date = '11-30-2022'
+Declare @start as date = '01-01-2023'
+Declare @end as date = '12-31-2023'
 
 SELECT vos.PrimaryID AS VOS_primaryId
 	, id.primaryId AS GM_primaryId
@@ -300,6 +315,7 @@ LEFT OUTER JOIN GlobalMembers.dbo.ClientIdPlus id ON vos.primaryId = id.primaryI
 
 WHERE vos.EncounterStatus = 'AP'
 AND vos.EncounterStatusDate BETWEEN @start and @end
+AND vos.begDate >= @start
 AND MemberACCGSA = 'North'
 AND vos.svcCode IN ('99357','99356','99255','99254','99253'
 				,'99252','99251','99239','99238','99236'
@@ -699,11 +715,11 @@ write.csv(Compliance, "./data/output/VBPMeasurementValidation/Compliance.csv")
 
 # transform for Chi Squared test
 Comp_ChiSq <- Compliance %>% 
-    select(Match, Numerator) %>% 
-  group_by(Match, Numerator) %>%
-  mutate(Numerator = as.character(Numerator)) %>% 
+    select(Match, `Gap Status`) %>% 
+  group_by(Match, `Gap Status`) %>%
+  #mutate(Numerator = as.character(Numerator)) %>% 
   count() %>% 
-  pivot_wider(names_from = "Numerator",
+  pivot_wider(names_from = "Gap Status",
               values_from = "n") %>%
   mutate(`0` = as.double(`0`),
          `1` = as.double(`1`))
