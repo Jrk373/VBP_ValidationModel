@@ -720,9 +720,15 @@ Comp_ChiSq <- Compliance %>%
   #mutate(Numerator = as.character(Numerator)) %>% 
   count() %>% 
   pivot_wider(names_from = "Gap Status",
+<<<<<<< HEAD
               values_from = "n")
   # mutate(`0` = as.double(`0`),
   #        `1` = as.double(`1`))
+=======
+              values_from = "n") %>%
+  mutate(`0` = as.double(`0`),
+         `1` = as.double(`1`))
+>>>>>>> b3384545142c67e050e57984a8c5c2b4ad848935
 
 write.csv(Comp_ChiSq, "./data/output/VBPMeasurementValidation/Comp_ChiSq.csv")
 
