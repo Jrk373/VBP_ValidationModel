@@ -1,6 +1,9 @@
+-- This is the code to extract IP Claims data from the HCA data warehouse
+-- Updated 5/2/23 by JRK
+
 -- Declare Date Range
-Declare @start as date = '01-01-2022'
-Declare @end as date = '12-31-2022'
+Declare @start as date = '01-01-2023'
+Declare @end as date = '12-31-2023'
 
 SELECT vos.PrimaryID AS VOS_primaryId
 	, id.primaryId AS GM_primaryId

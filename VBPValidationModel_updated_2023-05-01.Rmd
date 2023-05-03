@@ -357,7 +357,7 @@ GROUP BY vos.PrimaryID
 ```
 
 ```{r data_IPClaims, include=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
-IPClaims <- read_xlsx("./data/data_original_cat_2022-12-31_IPClaims.xlsx", sheet = "IPClaims")
+IPClaims <- read_xlsx("./data/data_original_cat_2023-05-01_IPClaims.xlsx", sheet = "Sheet1")
 MHDxCodes <- read.csv("./data/data_reference_MHDxCodes.csv")
 ```
 
