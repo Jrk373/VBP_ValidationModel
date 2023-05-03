@@ -720,9 +720,9 @@ Comp_ChiSq <- Compliance %>%
   #mutate(Numerator = as.character(Numerator)) %>% 
   count() %>% 
   pivot_wider(names_from = "Gap Status",
-              values_from = "n") %>%
-  mutate(`0` = as.double(`0`),
-         `1` = as.double(`1`))
+              values_from = "n")
+  # mutate(`0` = as.double(`0`),
+  #        `1` = as.double(`1`))
 
 write.csv(Comp_ChiSq, "./data/output/VBPMeasurementValidation/Comp_ChiSq.csv")
 
@@ -733,19 +733,16 @@ chisq.test(Comp_ChiSq[-1], correct = FALSE)
 ```{r Fig_ChiSq, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 
 Compliance %>% 
-  select(Match, Numerator) %>% 
-  group_by(Match, Numerator) %>%
-  mutate(Numerator = as.character(Numerator)) %>% 
-  mutate(Numerator = if_else(Numerator == "0", "NonCompliant", "Compliant")) %>% 
-  
-  #rename(Numerator, c("A","B")) %>% 
+  select(Match, `Gap Status`) %>% 
+  group_by(Match, `Gap Status`) %>%
+  mutate(Numerator = if_else(`Gap Status` == "OPEN", "NonCompliant", "Compliant")) %>% 
   count() %>% 
-ggplot(aes(fill=Match, x=Numerator, y=n)) +
+ggplot(aes(fill=Match, x=`Gap Status`, y=n)) +
   geom_col() +
   scale_fill_manual(values = c(Match = "#5e0932", NoMatch = "#119ec0"))+
   labs(title = "VBP Report Member Event Validation",
        subtitle = "Distinct member validation against adjudicated claims",
-       caption = "*From claims adjudicated through November 30, 2022") +
+       caption = "*From claims adjudicated through April 27, 2023") +
   ylab("Number of Distinct Members") +
   xlab("FUH7 Compliance Status")+
 theme_get()+
