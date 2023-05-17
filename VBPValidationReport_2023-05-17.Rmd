@@ -30,6 +30,7 @@ InLineCode <- data.frame(
   HEDISVersion = "My 2023",
   var5 = "Text"
 )
+
 ```
 
 # Overview
@@ -607,8 +608,16 @@ The results of those members that were validated against an adjudicated claim we
 2.  By service code:
     -   `r ValidatedVBPMembers %>% group_by(svccode) %>% nrow()` svccodes were used
 
-    -   0124 and 99232 are most common
-    
+```{r Service Code Table, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+
+ValidatedVBPMembers |> 
+  group_by(svccode) |> 
+  count() |> 
+  arrange(- n) |> 
+  head(10) |> 
+  kable()
+
+```    
 3.  By age:
     -   Many different ages between age 7 and 79
 
@@ -675,19 +684,19 @@ kable(VMMbyDiagnosisGroupRange)
 
 Overall Compliance of All Reported VBP QR Events (Comp_ChiSq):
 
--   \_\_\_ Non-Compliant
+-   `r Compliance |>  filter(``Gap Status`` == "OPEN") |> nrow()` Non-Compliant
 
--   \_\_\_ Compliant
+-   `r Compliance |> filter(``Gap Status``== "CLOSED") |> nrow()` Compliant
 
 Compliance by VBP Members Matched with Claim:
 
--   \_\_\_: Matched, NonCompliant(MNC)
+-   `r Compliance |> filter(``Gap Status``== "OPEN" & Match == "Match") |> nrow()`: Matched, NonCompliant(MNC)
 
--   \_\_\_: Matched, Compliant (MC)
+-   `r Compliance |> filter(``Gap Status``== "CLOSED" & Match == "Match") |> nrow()`: Matched, Compliant (MC)
 
--   \_\_\_: NonMatched, NonCompliant (NMNC)
+-   `r Compliance |> filter(``Gap Status``== "OPEN" & Match == "NoMatch") |> nrow()`: NonMatched, NonCompliant (NMNC)
 
--   \_\_\_: NonMatched, Compliant (NMC)
+-   `r Compliance |> filter(``Gap Status``== "Closed" & Match == "NoMatch") |> nrow()`: NonMatched, Compliant (NMC)
 
 **Chi Squared Test:**
 
@@ -730,6 +739,8 @@ Comp_ChiSq <- Compliance %>%
 
 chisq.test(Comp_ChiSq[-1], correct = FALSE)
 
+
+
 ```
 
 ```{r Fig_ChiSq, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -753,6 +764,8 @@ theme_get()+
     plot.subtitle = element_text(face = "italic"),
     plot.caption = element_text(face = "bold.italic", hjust = 0, vjust = -1)
   )
+
+
 
 ```
 

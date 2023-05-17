@@ -2173,9 +2173,110 @@ FUH7 eligible IP Claims (ValidatedVBPMembers):</p>
 </ul></li>
 <li>By service code:
 <ul>
-<li><p>1096 svccodes were used</p></li>
-<li><p>0124 and 99232 are most common</p></li>
+<li>1096 svccodes were used</li>
 </ul></li>
+</ol>
+<pre class="r"><code>ValidatedVBPMembers |&gt; 
+  group_by(svccode) |&gt; 
+  count() |&gt; 
+  arrange(- n) |&gt; 
+  head(10) |&gt; 
+  kable()</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+svccode
+</th>
+<th style="text-align:right;">
+n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+124
+</td>
+<td style="text-align:right;">
+641
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+99233
+</td>
+<td style="text-align:right;">
+169
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+99232
+</td>
+<td style="text-align:right;">
+126
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+99231
+</td>
+<td style="text-align:right;">
+52
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+99239
+</td>
+<td style="text-align:right;">
+40
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+114
+</td>
+<td style="text-align:right;">
+28
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+126
+</td>
+<td style="text-align:right;">
+17
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+99238
+</td>
+<td style="text-align:right;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+99221
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+99254
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+<ol start="3" style="list-style-type: decimal">
 <li>By age:
 <ul>
 <li><p>Many different ages between age 7 and 79</p></li>
