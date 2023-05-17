@@ -150,8 +150,10 @@ The most recent Value-based Purchasing (VBP) Report ***(Report Date = 2023-03-23
 
 ```{r data_read_VBPQR, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # Import the unaltered VBP report, "Detail" sheet, as received from HCA
-vbp_cbi   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_94-2880847_Community_Bridges_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 # 5/1/23 sheet = "Detail" was change by HCA to sheet = "Roster"
+vbp_cbi   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_94-2880847_Community_Bridges_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+  vbp_cbi <- vbp_cbi [,-1] 
+  colnames(vbp_cbi) <- c("BCBSAZ Health Choice" ,"...2", "...3", "...4", "...5", "...6", "...7", "...8", "...9")
 vbp_cpih  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0215065_Change_Point_Integrated_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 vbp_lcbhc <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0250938_Little_Colorado_Behavioral_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 vbp_mmhc  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0214457_Mohave_Mental_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
@@ -159,6 +161,10 @@ vbp_ph    <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0
 vbp_sbhs  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0290033_Southwest_Behavioral_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 vbp_shg   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 vbp_tgc   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+
+## if any of the tables pick up rogue columns
+#vbp_cbi <- vbp_cbi [,-1] 
+#colnames(vbp_cbi) <- c("BCBSAZ Health Choice" ,"...2", "...3", "...4", "...5", "...6", "...7", "...8", "...9")
 
 # Bind the Details sheet from all providers into one table
 Master_VBP_Rep_Comb <- rbind(
@@ -172,7 +178,7 @@ Master_VBP_Rep_Comb <- rbind(
   vbp_tgc
 )
 # date of file = date of VBP QR report
-write.csv(Master_VBP_Rep_Comb, "./data/output/VBPMeasurementValidation/2023-04-27_Master_VBP_Rep_Comb.csv")
+#write.csv(Master_VBP_Rep_Comb, "./data/output/VBPMeasurementValidation/2023-04-27_Master_VBP_Rep_Comb.csv")
 ```
 
 The Table, ***Master_VBP_Rep_Comb,*** is then transformed in order to remove superfluous white space and other text and table titles that were imported by default. The key transformations are:
@@ -240,7 +246,7 @@ VBP_Rep_Comb_validation <- VBP_Rep_Comb_validation %>%
         ))))))))) %>% 
   drop_na(Provider_Shortname)
 
-write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_Rep_Comb_validation_complete_2023-04-27.csv")
+#write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_Rep_Comb_validation_complete_2023-04-27.csv")
 ```
 
 ```{r transform_MasterVBP3, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -248,20 +254,20 @@ write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_R
 VBP_Rep_Comb_eval <- VBP_Rep_Comb_validation %>% 
   filter(`SubMeasure ID` == "FUH")
 
-write.csv(VBP_Rep_Comb_eval, "./data/output/VBPMeasurementValidation/VBP_Rep_Comb_Eval.csv")
+#write.csv(VBP_Rep_Comb_eval, "./data/output/VBPMeasurementValidation/VBP_Rep_Comb_Eval.csv")
 
 # Isolate member ID for the validation
 VBP_Rep_Comb_validation <- VBP_Rep_Comb_validation %>% 
   filter(`SubMeasure ID` == "FUH") %>% 
   select(`Member ID`)
 
-write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_Validation.csv")
+#write.csv(VBP_Rep_Comb_validation, "./data/output/VBPMeasurementValidation/VBP_Validation.csv")
 
 ```
 
 ### Health Choice Adjudicated Claims
 
-Claims data was extracted from the Health Choice data warehouse for the period of ***2023-01-01 to 2022-04-27***, meaning claims adjudicated through 11-30-2023 in order to be consistent with the VBP Quality Report date ranges. This data includes adjudicated claims for members of the Norther GSA, ACC health plan, in other words, Alliance Members.
+Claims data was extracted from the Health Choice data warehouse for the period of ***2023-01-01 to 2022-04-27***, meaning claims adjudicated through __________ in order to be consistent with the VBP Quality Report date ranges. This data includes adjudicated claims for members of the Norther GSA, ACC health plan, in other words, Alliance Members.
 
 The resulting solution is exported to .csv and saved as: **(./data/data_original_cat_2022-05-01_IPClaims)**. The IP Claims data is loaded to the model for analysis. In addition, a data frame was loaded that contains the HEDIS My2022 eligible ICD10 diagnoses for the FUH7 measure.
 
@@ -379,7 +385,7 @@ MHDxCodes <- read.csv("./data/data_reference_MHDxCodes.csv")
 
 The IPClaims data was transformed in the following ways to prepare it for analysis:
 
-1.  Claims are filtered to only include Alliance Providers. There were 25,710 claims that were assigned to APs.
+1.  Claims are filtered to only include Alliance Providers. There were ______ claims that were assigned to APs.
 
 2.  Claims are then filtered to include only those that have a qualifying HEDIS My2022 eligible inpatient code, using ***IP_Code_CPT*** and ***IP_Code_UBREV***, AND an associated eligible HEDIS My2022 mental health ICD10 diagnostic code, from ***data_reference_MHDxCodes***, in any of the diagnosis variables in the claim. There are 13 variables for diagnoses, from *Primary Diagnosis* to *Dx12*.
 
@@ -413,7 +419,7 @@ IPClaims_Summary <- IPClaims %>%
                                      )))))))))))))) %>% 
   filter(Elig_MHDx != "NotBH") 
 
-write.csv(IPClaims_Summary, "./data/output/VBPMeasurementValidation/IPClaims_Summary.csv")
+#write.csv(IPClaims_Summary, "./data/output/VBPMeasurementValidation/IPClaims_Summary.csv")
   
 ```
 
@@ -423,7 +429,7 @@ IPClaims_validation <- IPClaims_Summary %>%
   select(MemberID,
          svccode)
 
-write.csv(IPClaims_validation, "./data/output/VBPMeasurementValidation/IPClaims_Validation.csv")
+#write.csv(IPClaims_validation, "./data/output/VBPMeasurementValidation/IPClaims_Validation.csv")
 
 ```
 
@@ -455,7 +461,7 @@ VBP_Unduplicated <- VBP_Rep_Comb_validation %>%
   rename("MemberID" = `Member ID`) %>% 
   count()
 
-write.csv(VBP_Unduplicated, "./data/output/VBPMeasurementValidation/VBP_Unduplicated.csv")
+#write.csv(VBP_Unduplicated, "./data/output/VBPMeasurementValidation/VBP_Unduplicated.csv")
 ```
 
 ***Claims***
@@ -468,7 +474,7 @@ IPClaims_Unduplicated <- IPClaims_validation %>%
   group_by(MemberID) %>% 
   count()
 
-write.csv(IPClaims_Unduplicated, "./data/output/VBPMeasurementValidation/IPClaims_Unduplicated.csv")
+#write.csv(IPClaims_Unduplicated, "./data/output/VBPMeasurementValidation/IPClaims_Unduplicated.csv")
 ```
 
 ***Merge VBP QR and Claims Data to one Table***
@@ -491,7 +497,7 @@ Validation_Matrix <-
          "claims" = n.y) %>% 
   mutate(Match = if_else((is.na(VBP) | is.na(claims)), "NoMatch", "Match"))
 
-write.csv(Validation_Matrix, "./data/output/VBPMeasurementValidation/ValidationMatrix.csv")
+#write.csv(Validation_Matrix, "./data/output/VBPMeasurementValidation/ValidationMatrix.csv")
 
 ```
 
@@ -499,19 +505,19 @@ write.csv(Validation_Matrix, "./data/output/VBPMeasurementValidation/ValidationM
 
 ***VBP Reports***
 
--   **8** VBP report details sheets were imported, merged and cleaned, creating ***Master_Rep_Comb*** with ***98,294*** observations of **30** variables.
+-   **8** VBP report details sheets were imported, merged and cleaned, creating ***Master_Rep_Comb*** with ***_________*** observations of **________** variables.
 
--   ***VBP_Rep_Comb_validation*** was created from the master to isolate instances of FUH7, and then select for *Member ID*, ultimately yielding **955** observations of MemberIDs.
+-   ***VBP_Rep_Comb_validation*** was created from the master to isolate instances of FUH7, and then select for *Member ID*, ultimately yielding **________** observations of MemberIDs.
 
 ***Claims***
 
--   Adjudicated claims with qualifying HEDIS My2022 inpatient service codes are queried from Health Choice data warehouse and read in as ***IPClaims***, with **45,287** observations of **35** variables.
+-   Adjudicated claims with qualifying HEDIS My2022 inpatient service codes are queried from Health Choice data warehouse and read in as ***IPClaims***, with **_______** observations of **35** variables.
 
--   ***IPClaims*** is filtered to only include Alliance Providers, and only observations with a qualifying mental health diagnosis. *MemberID* and *svccode*, are selected ultimately yielding a table called ***IPClaims_validation*** with **33,137** observations.
+-   ***IPClaims*** is filtered to only include Alliance Providers, and only observations with a qualifying mental health diagnosis. *MemberID* and *svccode*, are selected ultimately yielding a table called ***IPClaims_validation*** with **___** observations.
 
 ***Validation Matrix***
 
--   The ***Validation_Matrix*** was created by reducing each of ***VBP_Rep_Comb_validation*** and ***IPClaims_validation*** to unduplicated observations of each *MemberID*, and then full outer joining them on *MemberID* yielding a table with **2,150** observations of **4** variables.
+-   The ***Validation_Matrix*** was created by reducing each of ***VBP_Rep_Comb_validation*** and ***IPClaims_validation*** to unduplicated observations of each *MemberID*, and then full outer joining them on *MemberID* yielding a table with **___** observations of **4** variables.
 
 ***The Validation_Matrix is the table that will be used for evaluation! Phew! :)***
 
@@ -522,21 +528,21 @@ Validation_Summary <- Validation_Matrix %>%
   group_by(Match) %>% 
   count()
 
-write.csv(Validation_Summary, "./data/output/VBPMeasurementValidation/Validation_Summary.csv")
+#write.csv(Validation_Summary, "./data/output/VBPMeasurementValidation/Validation_Summary.csv")
 
 ```
 
 ### Validating VBP Reports and Claims
 
-The ***VBP_Unduplicated (n=780)*** and the ***Claims_Unduplicated (n=1,785)*** were observed from left to right, meaning that all observations of data from ***VBP_Unduplicated*** are included, while ***Claims_Unduplicated*** are only included if matched with ***VBP_Unduplicated*** on the variable *Member ID*.
+The ***VBP_Unduplicated (n=____)*** and the ***Claims_Unduplicated (n=___)*** were observed from left to right, meaning that all observations of data from ***VBP_Unduplicated*** are included, while ***Claims_Unduplicated*** are only included if matched with ***VBP_Unduplicated*** on the variable *Member ID*.
 
--   472 of the 780 **(60.51%)** VBP members were validated against an eligible IP member, with **308** not matched. There are **308** false instances of eligible member events.
+-   _ of the __ **(___%)** VBP members were validated against an eligible IP member, with **___** not matched. There are **__** false instances of eligible member events.
 
--   Conversely, from the perspective of IP Claims, there are **1,066** of **1,538** **(69.31%)** IP Claims unique MemberIDs that ***are not matched*** with an eligible VBP member. There are as many as ***1,066*** instances of uncounted eligible events.
+-   Conversely, from the perspective of IP Claims, there are **___** of **___** **(___%)** IP Claims unique MemberIDs that ***are not matched*** with an eligible VBP member. There are as many as ***____*** instances of uncounted eligible events.
 
 ***Results***
 
-The initial results suggest possible significance. Only **60.51%** of the members identified by the VBP QR as eligible for the FUH7 measure actually appear in an adjudicated claim for an eligible Inpatient claim. So, even at this high level assessment there is ***limited level validation***. This discrepancy could result in mis-reporting of performance scores to the detriment of the Alliance.
+The initial results suggest possible significance. Only **___%** of the members identified by the VBP QR as eligible for the FUH7 measure actually appear in an adjudicated claim for an eligible Inpatient claim. So, even at this high level assessment there is ***limited level validation***. This discrepancy could result in mis-reporting of performance scores to the detriment of the Alliance.
 
 ### Creation of FUH7 Member Follow Up List
 
@@ -565,7 +571,7 @@ ValMat_Match <-
         all.x = TRUE) %>%
   drop_na(Match)
 
-write.csv(ValMat_Match,"./data/output/VBPMeasurementValidation/ValMat_Match.csv")
+#write.csv(ValMat_Match,"./data/output/VBPMeasurementValidation/ValMat_Match.csv")
 
 ValMat_NoMatch <- 
    merge(x = ValMat_NoMatch,
@@ -574,7 +580,7 @@ ValMat_NoMatch <-
         all.x = TRUE) %>%
   drop_na(Match)
 
-write.csv(ValMat_NoMatch,"./data/output/VBPMeasurementValidation/ValMat_NoMatch.csv")
+#write.csv(ValMat_NoMatch,"./data/output/VBPMeasurementValidation/ValMat_NoMatch.csv")
 
 ValMat_All <- 
    merge(x = Validation_Matrix,
@@ -583,7 +589,7 @@ ValMat_All <-
         all = TRUE) %>%
   drop_na(Match)
 
-write.csv(ValMat_All,"./data/output/VBPMeasurementValidation/ValMat_All.csv")
+#write.csv(ValMat_All,"./data/output/VBPMeasurementValidation/ValMat_All.csv")
 ```
 
 ### Evaluation of Validated Data
@@ -603,7 +609,7 @@ The results were evaluated in several ways, including all eligible FUH7 eligible
 
     -   The histogram shows many below age 20
 4.  By Diagnosis:
-    -   There were 75 distinct diagnoses used
+    -   There were ___ distinct diagnoses used
 
     -   That is too many distinct diagnoses for this evaluation, so diagnoses were grouped into ICD 10 mental health groupings.
 
@@ -662,30 +668,30 @@ VMMwithDxGroupings <- merge(
   by = "primaryDiagnosisSimplified"
 )
 
-write.csv(VMMwithDxGroupings, "./data/output/VBPMeasurementValidation/ValMat_Match_withDxGrouping.csv")
+#write.csv(VMMwithDxGroupings, "./data/output/VBPMeasurementValidation/ValMat_Match_withDxGrouping.csv")
 
 VMMbyDiagnosisGroupRange <- VMMwithDxGroupings %>% group_by(DiagnosisGroupRange) %>% count()
 
-write.csv(VMMbyDiagnosisGroupRange, "./data/output/VBPMeasurementValidation/VMMbyDiagnosisGroupRange.csv")
+#write.csv(VMMbyDiagnosisGroupRange, "./data/output/VBPMeasurementValidation/VMMbyDiagnosisGroupRange.csv")
 ```
 
 ### Analysis of impact on false eligible member events:
 
 Overall Compliance of All Reported VBP QR Events (Comp_ChiSq):
 
--   507 Non-Compliant
+-   ___ Non-Compliant
 
--   386 Compliant
+-   ___ Compliant
 
 Compliance by VBP Members Matched with Claim:
 
--   313: Matched, NonCompliant(MNC)
+-   ___: Matched, NonCompliant(MNC)
 
--   291: Matched, Compliant (MC)
+-   ___: Matched, Compliant (MC)
 
--   194: NonMatched, NonCompliant (NMNC)
+-   ___: NonMatched, NonCompliant (NMNC)
 
--   95: NonMatched, Compliant (NMC)
+-   ___: NonMatched, Compliant (NMC)
 
 **Chi Squared Test:**
 
@@ -693,7 +699,7 @@ Q: What is the impact of the non-Matched member events?
 
 Chi squared test was run at alpha = .05
 
--   X-squared = 18.662, df = 1, p-value \< 0.001
+-   X-squared = ___, df = 1, p-value \< ___
 
 #Results
 
@@ -711,7 +717,7 @@ Compliance <-
         by = "MemberID",
         all.y = TRUE)
 #####
-write.csv(Compliance, "./data/output/VBPMeasurementValidation/Compliance.csv")
+#write.csv(Compliance, "./data/output/VBPMeasurementValidation/Compliance.csv")
 
 # transform for Chi Squared test
 Comp_ChiSq <- Compliance %>% 
@@ -720,17 +726,11 @@ Comp_ChiSq <- Compliance %>%
   #mutate(Numerator = as.character(Numerator)) %>% 
   count() %>% 
   pivot_wider(names_from = "Gap Status",
-<<<<<<< HEAD
               values_from = "n")
   # mutate(`0` = as.double(`0`),
   #        `1` = as.double(`1`))
-=======
-              values_from = "n") %>%
-  mutate(`0` = as.double(`0`),
-         `1` = as.double(`1`))
->>>>>>> b3384545142c67e050e57984a8c5c2b4ad848935
 
-write.csv(Comp_ChiSq, "./data/output/VBPMeasurementValidation/Comp_ChiSq.csv")
+#write.csv(Comp_ChiSq, "./data/output/VBPMeasurementValidation/Comp_ChiSq.csv")
 
 chisq.test(Comp_ChiSq[-1], correct = FALSE)
 
@@ -762,15 +762,8 @@ theme_get()+
 
 # Conclusion
 
-There is significant variance in the sample that is not due to chance. The effect of that difference is that the counting of eligible member events on the VBP Quality Reports that are ***not validated*** by eligible IP Claims is causing there to be ***false negatives*** disproportionately to false positives, leading to an artificial suppression of the Alliance's overall compliance score.
 
-In addition, there is a large number of eligible claims that cannot be matched to a VBP eligible member event. The impact of that result cannot be known from this study, but could represent a substantial number of uncounted eligible member events. It is also unknown what proportion of those results are compliant or non-compliant. Further investigation will be needed.
-
-In summary, this study **confirms the concerns of the Alliance Providers regarding accuracy of measurement**.
-
-There are indeed members who are identified by the VBP Report as eligible, who do not have an eligible service, and thus may be unknown to the provider, and consequently unable to be followed up with after hospitalization. In addition, it appears that there are over 1,000 potential eligible members documented by adjudicated claims that have not been counted among the VBP report eligible member events.
 
 # Reviews
 
-1.  3/16/2023 - Narbha Institute / Alliance Executive Leadership Meeting
-2.  3/21/2023 - Health Choice / Alliance Joint Operating Committee
+1.  
