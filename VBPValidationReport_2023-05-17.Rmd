@@ -603,11 +603,22 @@ The results of those members that were validated against an adjudicated claim we
 1.  By provider type:
     -   There were `r ValidatedVBPMembers %>% group_by(ProviderType) %>% nrow()` types observed
 
-    -   71, 8, 19, and B1 are most common
+**Top 10 Provider Types**
+```{r ProviderTypeTable, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+
+ValidatedVBPMembers |> 
+  group_by(ProviderType) |> 
+  count() |> 
+  arrange(- n) |> 
+  head(10) |> 
+  kable()
+
+``` 
     
 2.  By service code:
     -   `r ValidatedVBPMembers %>% group_by(svccode) %>% nrow()` svccodes were used
 
+**Top 10 Service Codes**
 ```{r Service Code Table, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 
 ValidatedVBPMembers |> 
@@ -618,10 +629,11 @@ ValidatedVBPMembers |>
   kable()
 
 ```    
+
 3.  By age:
     -   Many different ages between age 7 and 79
 
-    -   The histogram shows many below age 20
+**Histogram of Ages**
 ```{r ValidatedVBPMembers2, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 
 # Group by age
@@ -674,45 +686,21 @@ VMMwithDxGroupings <- merge(
 
 #write.csv(VMMwithDxGroupings, "./data/output/VBPMeasurementValidation/ValidatedVBPMembers_withDxGrouping.csv")
 
+#write.csv(VMMbyDiagnosisGroupRange, "./data/output/VBPMeasurementValidation/VMMbyDiagnosisGroupRange.csv")
+
 VMMbyDiagnosisGroupRange <- VMMwithDxGroupings %>% group_by(DiagnosisGroupRange) %>% count()
+```
+
+**Diagnostic Group Ranges**
+```{r DXGroupTable, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 
 kable(VMMbyDiagnosisGroupRange)
-#write.csv(VMMbyDiagnosisGroupRange, "./data/output/VBPMeasurementValidation/VMMbyDiagnosisGroupRange.csv")
+
 ```
 
 ### Analysis of impact on false eligible member events:
 
 Overall Compliance of All Reported VBP QR Events (Comp_ChiSq):
-
--   `r Compliance |>  filter(``Gap Status`` == "OPEN") |> nrow()` Non-Compliant
-
--   `r Compliance |> filter(``Gap Status``== "CLOSED") |> nrow()` Compliant
-
-Compliance by VBP Members Matched with Claim:
-
--   `r Compliance |> filter(``Gap Status``== "OPEN" & Match == "Match") |> nrow()`: Matched, NonCompliant(MNC)
-
--   `r Compliance |> filter(``Gap Status``== "CLOSED" & Match == "Match") |> nrow()`: Matched, Compliant (MC)
-
--   `r Compliance |> filter(``Gap Status``== "OPEN" & Match == "NoMatch") |> nrow()`: NonMatched, NonCompliant (NMNC)
-
--   `r Compliance |> filter(``Gap Status``== "Closed" & Match == "NoMatch") |> nrow()`: NonMatched, Compliant (NMC)
-
-**Chi Squared Test:**
-
-Q: What is the impact of the non-Matched member events?
-
-Chi squared test was run at alpha = .05
-
--   X-squared = ***, df = 1, p-value \<***
-
-#Results
-
-The differences observed between matched and non-matched, compliant and non-compliant is likely **NOT** due to chance.
-
--   There is an unknown factor causing a disproportionate amount of non-compliant, non-matched member events.
-
--   The difference is visible graphically as we can see below.
 
 ```{r ChiSq, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # transform VBP_Rep_Comp for compliance
@@ -721,36 +709,65 @@ Compliance <-
         y = VBPQR_AllAPsCombined_Cleaned2,
         by = "MemberID",
         all.y = TRUE)
+
+colnames(Compliance)[6] <- "Gap_Status"
 #####
 #write.csv(Compliance, "./data/output/VBPMeasurementValidation/Compliance.csv")
+```
 
+-   `r Compliance |> filter(Gap_Status == "OPEN") |> nrow()` Non-Compliant
+
+-   `r Compliance |> filter(Gap_Status == "CLOSED") |> nrow()` Compliant
+
+Compliance by VBP Members Matched with Claim:
+
+-   `r Compliance |> filter(Gap_Status== "OPEN" & Match == "Match") |> nrow()`: Matched, NonCompliant(MNC)
+
+-   `r Compliance |> filter(Gap_Status== "CLOSED" & Match == "Match") |> nrow()`: Matched, Compliant (MC)
+
+-   `r Compliance |> filter(Gap_Status== "OPEN" & Match == "NoMatch") |> nrow()`: NonMatched, NonCompliant (NMNC)
+
+-   `r Compliance |> filter(Gap_Status== "CLOSED" & Match == "NoMatch") |> nrow()`: NonMatched, Compliant (NMC)
+
+**Chi Squared Test:**
+
+Q: What is the impact of the non-Matched member events?
+
+Chi squared test was run at alpha = .05
+
+```{r ChiSq2, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # transform for Chi Squared test
 Comp_ChiSq <- Compliance %>% 
-    select(Match, `Gap Status`) %>% 
-  group_by(Match, `Gap Status`) %>%
+    select(Match, Gap_Status) %>% 
+  group_by(Match, Gap_Status) %>%
   #mutate(Numerator = as.character(Numerator)) %>% 
   count() %>% 
-  pivot_wider(names_from = "Gap Status",
+  pivot_wider(names_from = "Gap_Status",
               values_from = "n")
   # mutate(`0` = as.double(`0`),
   #        `1` = as.double(`1`))
 
 #write.csv(Comp_ChiSq, "./data/output/VBPMeasurementValidation/Comp_ChiSq.csv")
+```
 
+**Chi Squared Test Result**
+```{r ChiSq3, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 chisq.test(Comp_ChiSq[-1], correct = FALSE)
 
-
-
 ```
+
+# Results
+
+The differences observed between matched and non-matched, compliant and non-compliant is are not statistically significant, and may be attributed to error. 
 
 ```{r Fig_ChiSq, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 
 Compliance %>% 
-  select(Match, `Gap Status`) %>% 
-  group_by(Match, `Gap Status`) %>%
-  mutate(Numerator = if_else(`Gap Status` == "OPEN", "NonCompliant", "Compliant")) %>% 
+  select(Match, Gap_Status) %>% 
+  group_by(Match, Gap_Status) %>%
+  mutate(Numerator = if_else(Gap_Status == "OPEN", "NonCompliant", "Compliant")) %>% 
   count() %>% 
-ggplot(aes(fill=Match, x=`Gap Status`, y=n)) +
+ggplot(aes(fill=Match, x=Gap_Status, y=n)) +
   geom_col() +
   scale_fill_manual(values = c(Match = "#5e0932", NoMatch = "#119ec0"))+
   labs(title = "VBP Report Member Event Validation",
