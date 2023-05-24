@@ -35,7 +35,7 @@ InLineCode <- data.frame(
 
 # Overview
 
-A study was conducted to validate the measurement of HEDIS My2022 [^1] targets utilized in Health Choice's Value-Based Purchasing (VBP) program. Monthly Health Choice VBP Quality Reports and Health Choice adjudicated claims were used to analyze the validity of reported member events that were counted as Eligible for inclusion in the VBP Program measure, Follow Up after Hospitalization.
+A study was conducted to validate the measurement of HEDIS My2022 [^1] targets utilized in Health Choice's Value-Based Purchasing (VBP) program. Monthly Health Choice VBP Quality Reports (VBPQR) and Health Choice adjudicated claims were used to analyze the validity of reported member events that were counted as Eligible for inclusion in the VBP Program measure, Follow Up after Hospitalization. This assessment affirmed that the VBPQR for April 2023 was valid and can be used for further analysis. 
 
 [^1]: <https://www.ncqa.org/hedis/>
 
@@ -49,11 +49,11 @@ The Alliance ACO, a subsidiary of Health Choice[^2] and The Narbha Institute[^3]
 
 [^2]: <https://www.healthchoiceaz.com/>
 
-[^3]: www.narbha.org
+[^3]: <https://www.narbha.org/>
 
 [^4]: <https://www.azahcccs.gov/AHCCCS/Initiatives/AHCCCSCompleteCare/>
 
-Alliance Providers have reported member events, meaning instances that a member is deemed eligible for a given HEDIS measure, have been counted as eligible on their VBP Reports; however, the identified member **does not** appear on their membership rosters, or in their electronic medical record.
+Alliance Providers have reported that member events, meaning instances that a member is deemed eligible for a given HEDIS measure, have been counted as eligible on their VBP Reports; however, the identified member **does not** appear on their membership rosters, or in their electronic medical record.
 
 In addition, it has been reported by multiple providers that the number of individuals identified in the FUH7 measure is significantly lower than what would be expected, meaning some claims have not been counted that should have been.
 
@@ -69,7 +69,7 @@ The ***CRISP-DM*** process for data mining was used for this project [^5]. Cross
 
 ***Clear Understanding of business objective***
 
-The business objective is to determine if the Alliance Providers (AP) are being measured accurately. Health Choice uses a third party, Cotivity[^6], to measure its NCQA HEDIS goals reported in the VBP Quality Reports. Concerns have been raised from the providers that they have not been educated on the nature of the VBP reports, do not have easy access to the reports, and that the measurement results are inaccurate. Previous reports have addressed investigations and interventions regarding the first 2 concerns [^7]. This model addresses the concerns regarding accuracy of measurement.
+The business objective is to determine if the Alliance Providers (AP) are being measured accurately. Health Choice uses a third party, Cotivity[^6], to measure its NCQA HEDIS goals reported in the VBP Quality Rosters. Concerns have been raised from the providers that they have not been educated on the nature of the VBP reports, do not have easy access to the reports, and that the measurement results are inaccurate. Previous reports have addressed investigations and interventions regarding the first 2 concerns [^7]. This model addresses the concerns regarding accuracy of measurement.
 
 [^6]: <https://www.cotiviti.com/>
 
@@ -81,21 +81,23 @@ Success for this project includes:
 
 1.  A complete understanding of the health plan measurement of HEDIS NCQA targets
 2.  Conclusion on the question of accuracy of measurement
-3.  A working data model for us as an internal measurement tool, separate for Health Choice and its vendor.
+3.  A working data model for us as an internal measurement tool, separate from Health Choice and its vendor.
 
 The internal model can be used in the day-to-day management of patient care and provider activity, as well as health plan performance evaluations and payment.
 
 ***Situation Assessment***
 
-The Alliance Providers had been in the current state of limited knowledge concerning VBP reporting for multiple years. The VBP Validation Model (Kivela, 2023) provides a tool for viewing and understanding VBP measurement data at a provider and network level.
+The Alliance Providers had been in the current state of limited knowledge concerning VBP reporting for multiple years. The VBP Validation Model[^8] provides a tool for viewing and understanding VBP measurement data at a provider and network level.
 
 All of the APs stated a desire to utilize the member level data to improve practice.
 
+[^8]: Kivela, J.R. (2023). Value Based Purchasing Data Validation Model. The Northern Arizona Regional Behavioral Health Alliance
+
 ***Translate to analytical objectives (Determine Project Goals)***
 
-1.  Aggregate and evaluate Health Choice Value-Based Purchasing (VBP) reports in order to define the population of eligible member events for VBP measures.
+1.  Aggregate and evaluate Health Choice Value-Based Purchasing (VBP) Quality Rosters in order to define the population of eligible member events for VBP measures.
 2.  Evaluate Health Choice adjudicated claims in order to create a data model for the measurement and validation of VBP eligible member events.
-3.  Compare Health Choice VBP Quality Reports to Health Choice adjudicated claims in order to confirm or deny the reported discrepancy in FUH7 eligible member events.
+3.  Compare Health Choice VBP Quality Rosters to Health Choice adjudicated claims in order to confirm or deny the reported discrepancy in FUH7 eligible member events.
 
 ***Clearly understand how action can be taken based on outcomes***
 
@@ -118,26 +120,20 @@ The primary data sources for this project are:
 
 1.  Value-based Purchasing Quality Roster
     -   Excel (.xlsx) workbook containing a report of the members eligible for VBP HEDIS NCQA measures and their compliance status
-
     -   PIVOT tables summarizing the performance of Alliance Providers on each measure
-
     -   Member level data is not immediately viewable, but can be accessed through the data model management feature of Excel.
 2.  Adjudicated claims
     -   Queried from Health Choice data warehouse
-
     -   Data is extracted using SQL and exported to .csv files for processing
-
     -   Minimal processing is done through SQL
 
 ***Key fieldnames and targets***
 
 1.  Value-based Purchasing Quality Report
     -   MemberID
-
     -   Provider_Shortname
 2.  Adjudicated Claims
     -   Health Choice Medicaid ID (\~MemberID)
-
     -   svccode (Covered Service Code)
 
 ## Data Quality
@@ -151,7 +147,7 @@ The primary data sources for this project are:
 
 ## Data Preparation
 
-### Health Choice Value-based Purchasing Quality Reports (VBP QR)
+### Health Choice Value-based Purchasing Quality Rosters (VBPQR)
 
 The most recent Value-based Purchasing (VBP) Quality Roster (`r InLineCode$ReportDate`) for each Alliance Provider (AP) was gathered into the folder **(./data/VBPReports/Quality)**. The *Roster* page from the excel data model was extracted from each of the individual reports and compiled into a data frame, ***DataRaw_VBPQR_AllAPsCombined***, that contains the results of all APs. The VBP Report data is cumulative over the VBP measurement year `r InLineCode$MeasurementYear` and has a 60 day claims lag, such that the `r InLineCode$ReportDate` VBP QR contains claims adjudicated through `r InLineCode$ClaimsAdjudicatedThrough`.
 
@@ -169,9 +165,10 @@ vbp_sbhs  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0
 vbp_shg   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 vbp_tgc   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 
-## if any of the tables pick up rogue columns
-#vbp_cbi <- vbp_cbi [,-1] 
-#colnames(vbp_cbi) <- c("BCBSAZ Health Choice" ,"...2", "...3", "...4", "...5", "...6", "...7", "...8", "...9")
+# Pro Tip
+# if any of the tables pick up rogue columns...
+# vbp_cbi <- vbp_cbi [,-1] 
+# colnames(vbp_cbi) <- c("BCBSAZ Health Choice" ,"...2", "...3", "...4", "...5", "...6", "...7", "...8", "...9")
 
 # Bind the Details sheet from all providers into one table
 DataRaw_VBPQR_AllAPsCombined <- rbind(
@@ -184,6 +181,8 @@ DataRaw_VBPQR_AllAPsCombined <- rbind(
   vbp_shg,
   vbp_tgc
 )
+
+# Write to csv
 # date of file = date of VBP QR report
 #write.csv(DataRaw_VBPQR_AllAPsCombined, "./data/output/VBPMeasurementValidation/2023-04-27_DataRaw_VBPQR_AllAPsCombined.csv")
 ```
@@ -194,15 +193,13 @@ The Table, ***DataRaw_VBPQR_AllAPsCombined,*** is then transformed in order to r
 
 -   Promote data from the row with the column names [Row 6] into the column headers.
 
--   Complete the removal of superfluous rows by filtering the *LOB* variable to include only the value *HCA*.
+-   Complete the removal of superfluous rows by filtering the *NA* from the *Gap Status* variable.
 
--   Change the data types of the variables *Data Period, Numerator, Denominator*
-
--   Change the variable name of *Denominator* to *TotalEligible*
+-   Create a variable for Provider Shortnames.
 
 -   Store the transformed data as ***VBPQR_AllAPsCombined_Cleaned***
 
-The resulting table is a complete, cleaned list of all of the individual member events, for all of the VBP Measures, for all of the Alliance Providers.
+The resulting table is a complete, cleaned roster of all of the individual member events, for all of the VBP Measures, for all of the Alliance Providers.
 
 ***This table is used to construct the VBP Quality Report Dashboard as well as the Alliance Progress Report***
 
@@ -211,19 +208,17 @@ The resulting table is a complete, cleaned list of all of the individual member 
 VBPQR_AllAPsCombined_Cleaned <- DataRaw_VBPQR_AllAPsCombined
 
 # Filter out superfluous rows of nonsense data
-VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned %>%  
+VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |>  
   filter(`...2` != "NA")
 
 # Set column names to headers, which get imported on row 1 #5/2/23 - updated from "6" 
 colnames(VBPQR_AllAPsCombined_Cleaned) <- VBPQR_AllAPsCombined_Cleaned [1,] 
 
-# Remove the first row of data that hheaders
+# Remove the first row of data that headers
 VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned[-1,]
 
 # 5/1/23 - Create SubMeasureID
 VBPQR_AllAPsCombined_Cleaned$`SubMeasure ID` <- substr(VBPQR_AllAPsCombined_Cleaned$Measure, 1, 3)
-
-
 
 # # set date format for report date
 # VBPQR_AllAPsCombined_Cleaned$`Data Period` <- as.numeric(VBPQR_AllAPsCombined_Cleaned$`Data Period`)
@@ -241,7 +236,7 @@ A copy of the file ***VBPQR_AllAPsCombined_Cleaned,*** was stored as ***VBPQR_Al
 
 ```{r transform_MasterVBP2, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # Create a Provider Shortname
-VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned %>% 
+VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |> 
   mutate(Provider_Shortname = ifelse(`Health Home TIN & Name` == "94-2880847 - COMMUNITY BRIDGES", "CBI",
             ifelse(`Health Home TIN & Name` == "86-0215065 - CHANGE POINT INTEGRATED HEALTH", "CPIH", 
                    ifelse(`Health Home TIN & Name` == "86-0250938 - LITTLE COLORADO BEHAVIORAL HEALTH", "LCBHC", 
@@ -250,7 +245,7 @@ VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned %>%
                                         ifelse(`Health Home TIN & Name` == "86-0290033 - SOUTHWEST BEHAVIORAL HEALTH", "SBHS", 
                                                ifelse(`Health Home TIN & Name` == "86-0207499 - SPECTRUM HEALTH GROUP", "SHG",
                                                       ifelse(`Health Home TIN & Name` == "86-0223720 - THE GUIDANCE CENTER", "TGC", NA
-        ))))))))) %>% 
+        ))))))))) |> 
   drop_na(Provider_Shortname)
 
 #write.csv(VBPQR_AllAPsCombined_Cleaned, "./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned_complete_2023-04-27.csv")
@@ -258,14 +253,14 @@ VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned %>%
 
 ```{r transform_MasterVBP3, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # create a duplicate at this phase to be used in later evaluation
-VBPQR_AllAPsCombined_Cleaned2 <- VBPQR_AllAPsCombined_Cleaned %>% 
+VBPQR_AllAPsCombined_Cleaned2 <- VBPQR_AllAPsCombined_Cleaned |> 
   filter(`SubMeasure ID` == "FUH")
 
 #write.csv(VBPQR_AllAPsCombined_Cleaned2, "./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned2.csv")
 
 # Isolate member ID for the validation
-VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned %>% 
-  filter(`SubMeasure ID` == "FUH") %>% 
+VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |> 
+  filter(`SubMeasure ID` == "FUH") |> 
   select(`Member ID`)
 
 #write.csv(VBPQR_AllAPsCombined_Cleaned, "./data/output/VBPMeasurementValidation/VBP_Validation.csv")
@@ -276,9 +271,9 @@ VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned %>%
 
 Claims data was extracted from the Health Choice data warehouse for the period of `r InLineCode$ReportDate`, meaning claims adjudicated through `r InLineCode$ClaimsAdjudicatedThrough` in order to be consistent with the VBP Quality Report date ranges. This data includes adjudicated claims for members of the Norther GSA, ACC health plan, in other words, Alliance Members.
 
-The resulting solution is exported to .csv and saved as: **(./data/data_original_cat_2022-05-01_IPClaims)**. The IP Claims data is loaded to the model for analysis. In addition, a data frame was loaded that contains the HEDIS `r InLineCode$HEDISVersion` eligible ICD10 diagnoses for the FUH7 measure.
+The resulting solution, **(./data/data_original_cat_2022-05-01_IPClaims)**, is exported to .csv and encrypted in the Azure cloud service. The IP Claims data is loaded to the model for analysis. In addition, a data frame was loaded that contains the HEDIS `r InLineCode$HEDISVersion` eligible ICD10 diagnoses for the FUH7 measure.
 
-```{r SQL, eval=FALSE, include=FALSE, echo=TRUE, warning=FALSE, message=FALSE}
+```{r SQL, eval=FALSE, include=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
 -- This is the code to extract IP Claims data from the HCA data warehouse
 -- Updated 5/2/23 by JRK
 
@@ -398,8 +393,8 @@ Provider_ShortName <- (c("CBI", "CPIH", "EHS", "LCBHC", "MMHC", "SHG", "SBH", "T
 # Create a vector of ICD10 codes for behavioral health
 MH_Dx <- MHDxCodes$Code
 # Transform data
-IPClaims_Summary <- IPClaims %>% 
-  filter(ra %in% Provider_ShortName) %>% 
+IPClaims_Summary <- IPClaims |> 
+  filter(ra %in% Provider_ShortName) |> 
   mutate(Elig_MHDx = if_else(PrimaryDiagnosis %in% MH_Dx, PrimaryDiagnosis,
                              if_else(Dx1 %in% MH_Dx, Dx1,
                                      if_else(Dx2 %in% MH_Dx, Dx2,
@@ -413,26 +408,26 @@ IPClaims_Summary <- IPClaims %>%
                      if_else(Dx10 %in% MH_Dx, Dx10,
                              if_else(Dx11 %in% MH_Dx, Dx11,
                                      if_else(Dx12 %in% MH_Dx, Dx12, "NotBH"
-                                     )))))))))))))) %>% 
+                                     )))))))))))))) |> 
   filter(Elig_MHDx != "NotBH") 
 
 #write.csv(IPClaims_Summary, "./data/output/VBPMeasurementValidation/IPClaims_Summary.csv")
   
 ```
 
-1.  Claims are filtered to only include Alliance Providers. There were `r nrow(IPClaims_Summary)` claims that were assigned to APs.
+1.  IPClaims are filtered to only include Alliance Providers. There were `r nrow(IPClaims_Summary)` claims that were assigned to APs.
 
-2.  Claims are then filtered to include only those that have a qualifying HEDIS `r InLineCode$HEDISVersion` eligible inpatient code, using ***IP_Code_CPT*** and ***IP_Code_UBREV***, AND an associated eligible HEDIS `r InLineCode$HEDISVersion` mental health ICD10 diagnostic code, from ***data_reference_MHDxCodes***, in any of the diagnosis variables in the claim. There are 13 variables for diagnoses, from *Primary Diagnosis* to *Dx12*.
+2.  IPClaims are then filtered to include only those that have a qualifying HEDIS `r InLineCode$HEDISVersion` eligible inpatient code, using ***IP_Code_CPT*** and ***IP_Code_UBREV***, AND an associated eligible HEDIS `r InLineCode$HEDISVersion` mental health ICD10 diagnostic code, from ***data_reference_MHDxCodes***, in any of the diagnosis variables in the claim. There are 13 variables for diagnoses, from *Primary Diagnosis* to *Dx12*.
 
 3.  The resulting table is ***IPClaims_Summary***
 
-    1.  The resulting table contains all of the claims from Health Choice adjudicated claims, for those cases where there was an eligible FUH7 Inpatient code, AND and eligible Mental Health Diagnosis code, within the VBP reporting period.
+    A.  The resulting table contains all of the claims from Health Choice adjudicated claims, for those cases where there was an eligible FUH7 Inpatient code, AND and eligible Mental Health Diagnosis code, within the VBP reporting period.
 
 The variables *MemberID* and *svccode* were selected into a separate data frame, called ***IPClaims_Validation*** for further analysis.
 
 ```{r transform_IPClaims2, include=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
 
-IPClaims_validation <- IPClaims_Summary %>% 
+IPClaims_validation <- IPClaims_Summary |> 
   select(MemberID,
          svccode)
 
@@ -463,9 +458,9 @@ This model outlines the logical rules and data structures that can be used to me
 ***The VBPQR_AllAPsCombined_Cleaned*** data frame was loaded to the test model. The data was summarized, per member, by counting the instances of eligibility per member. This creates a vector of unduplicated Member IDs called ***VBP_Unduplicated***.
 
 ```{r data_testVBP2, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
-VBP_Unduplicated <- VBPQR_AllAPsCombined_Cleaned %>% 
-  group_by(`Member ID`) %>% 
-  rename("MemberID" = `Member ID`) %>% 
+VBP_Unduplicated <- VBPQR_AllAPsCombined_Cleaned |> 
+  group_by(`Member ID`) |> 
+  rename("MemberID" = `Member ID`) |> 
   count()
 
 #write.csv(VBP_Unduplicated, "./data/output/VBPMeasurementValidation/VBP_Unduplicated.csv")
@@ -476,9 +471,9 @@ VBP_Unduplicated <- VBPQR_AllAPsCombined_Cleaned %>%
 The ***IPClaims_validation*** data frame was loaded to the test model. The claims data was then summarized by counting the instances of HEDIS My2022 eligible claims per member. This creates a vector of unduplicated Member IDs called ***Claims_Unduplicated***.
 
 ```{r data_testClaims2, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
-IPClaims_Unduplicated <- IPClaims_validation %>% 
-  filter(MemberID != "NULL") %>% 
-  group_by(MemberID) %>% 
+IPClaims_Unduplicated <- IPClaims_validation |> 
+  filter(MemberID != "NULL") |> 
+  group_by(MemberID) |> 
   count()
 
 #write.csv(IPClaims_Unduplicated, "./data/output/VBPMeasurementValidation/IPClaims_Unduplicated.csv")
@@ -499,9 +494,9 @@ Validation_Matrix <-
   merge(x = VBP_Unduplicated,
         y = IPClaims_Unduplicated,
         by = "MemberID",
-        all = TRUE) %>% 
+        all = TRUE) |> 
   rename("VBP" = n.x,
-         "claims" = n.y) %>% 
+         "claims" = n.y) |> 
   mutate(Match = if_else((is.na(VBP) | is.na(claims)), "NoMatch", "Match"))
 
 #write.csv(Validation_Matrix, "./data/output/VBPMeasurementValidation/ValidationMatrix.csv")
@@ -530,8 +525,8 @@ Validation_Matrix <-
 ## Evaluation
 
 ```{r eval_ValidationSummary, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
-Validation_Summary <- Validation_Matrix %>% 
-  group_by(Match) %>% 
+Validation_Summary <- Validation_Matrix |> 
+  group_by(Match) |> 
   count()
 
 #write.csv(Validation_Summary, "./data/output/VBPMeasurementValidation/Validation_Summary.csv")
@@ -546,8 +541,6 @@ The ***VBP_Unduplicated*** and the ***Claims_Unduplicated*** were observed from 
 
 ## Results
 
-The initial results suggest possible significance. Only `r Validation_Matrix |> filter(Match == "Match") |> count() / nrow(Validation_Matrix)` of the members identified by the VBP QR as eligible for the FUH7 measure actually appear in an adjudicated claim for an eligible Inpatient code. A low percentage here could result in mis-reporting of performance scores to the detriment of the Alliance.
-
 ### Creation of FUH7 Member Follow Up List
 
 The ***Validation_Matrix*** was transformed and rejoined with ***IPClaims_Summary*** to create a table that will be used to generate Member Follow Up Lists. This new table is called ***MemberFollowUpList***.
@@ -557,14 +550,14 @@ The ***Validation_Matrix*** was transformed and rejoined with ***IPClaims_Summar
 ```{r ValidatedVBPMembers, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # seperate the match list from the no match list
 
-ValidatedVBPMembers <- Validation_Matrix %>% 
+ValidatedVBPMembers <- Validation_Matrix |> 
   filter(Match == "Match")
   
-ValMat_NoMatch <- Validation_Matrix %>% 
+ValMat_NoMatch <- Validation_Matrix |> 
   filter(Match == "NoMatch")
 
 # Using the copy of VBPQR_AllAPsCombined_Cleaned we made above, rename MemberID to match
-VBPQR_AllAPsCombined_Cleaned2 <- VBPQR_AllAPsCombined_Cleaned2 %>%
+VBPQR_AllAPsCombined_Cleaned2 <- VBPQR_AllAPsCombined_Cleaned2 |>
   rename("MemberID" = `Member ID`)
 
 # Rejoin the matched and non-matched MemberIDs to their claims data
@@ -572,7 +565,7 @@ ValidatedVBPMembers <-
    merge(x = ValidatedVBPMembers,
         y = IPClaims_Summary,
         by = "MemberID",
-        all.x = TRUE) %>%
+        all.x = TRUE) |>
   drop_na(Match)
 
 #write.csv(ValidatedVBPMembers,"./data/output/VBPMeasurementValidation/ValidatedVBPMembers.csv")
@@ -581,7 +574,7 @@ ValMat_NoMatch <-
    merge(x = ValMat_NoMatch,
         y = VBPQR_AllAPsCombined_Cleaned2,
         by = "MemberID",
-        all.x = TRUE) %>%
+        all.x = TRUE) |>
   drop_na(Match)
 
 #write.csv(ValMat_NoMatch,"./data/output/VBPMeasurementValidation/ValMat_NoMatch.csv")
@@ -590,7 +583,7 @@ MemberFollowUpList <-
    merge(x = Validation_Matrix,
         y = IPClaims_Summary,
         by = "MemberID",
-        all = TRUE) %>%
+        all = TRUE) |>
   drop_na(Match)
 
 #write.csv(MemberFollowUpList,"./data/output/VBPMeasurementValidation/MemberFollowUpList.csv")
@@ -601,7 +594,6 @@ MemberFollowUpList <-
 The results of those members that were validated against an adjudicated claim were evaluated in several ways, including all eligible FUH7 eligible IP Claims (ValidatedVBPMembers):
 
 1.  By provider type:
-    -   There were `r ValidatedVBPMembers %>% group_by(ProviderType) %>% nrow()` types observed
 
 **Top 10 Provider Types**
 ```{r ProviderTypeTable, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -616,7 +608,6 @@ ValidatedVBPMembers |>
 ``` 
     
 2.  By service code:
-    -   `r ValidatedVBPMembers %>% group_by(svccode) %>% nrow()` svccodes were used
 
 **Top 10 Service Codes**
 ```{r Service Code Table, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -632,18 +623,18 @@ ValidatedVBPMembers |>
 
 3.  By age:
     -   Many different ages between age 7 and 79
+    -   Histogram below is for all validated member events
 
 **Histogram of Ages**
 ```{r ValidatedVBPMembers2, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 
 # Group by age
-# ValidatedVBPMembers %>% group_by(Age) %>% nrow()
+# ValidatedVBPMembers |> group_by(Age) |> nrow()
 
 hist(ValidatedVBPMembers$Age)
 ```
 
 4.  By Diagnosis:
-    -   There were `r ValidatedVBPMembers %>% group_by(Elig_MHDx) %>% nrow()` distinct diagnoses used
 
     -   That is too many distinct diagnoses for this evaluation, so diagnoses were grouped into ICD 10 mental health groupings (see table below).
 
@@ -657,7 +648,7 @@ hist(ValidatedVBPMembers$Age)
 ICD10Groupings <- read.csv("./data/dataModel/ICD10andBHGroupingsCombined.csv")
 
 # Create column with first found BHDx
-VMMwithDxGroupings <- ValidatedVBPMembers %>% 
+VMMwithDxGroupings <- ValidatedVBPMembers |> 
   mutate(Elig_MHDx = if_else(PrimaryDiagnosis %in% MH_Dx, PrimaryDiagnosis,
                              if_else(Dx1 %in% MH_Dx, Dx1,
                                      if_else(Dx2 %in% MH_Dx, Dx2,
@@ -672,9 +663,9 @@ VMMwithDxGroupings <- ValidatedVBPMembers %>%
                                                                                                              if_else(Dx11 %in% MH_Dx, Dx11,
                                                                                                                      if_else(Dx12 %in% MH_Dx, Dx12, "NotBH"                                                                             ))))))))))))))
 # Group by Dx
-# ValidatedVBPMembers %>% group_by(Elig_MHDx) %>% count()
+# ValidatedVBPMembers |> group_by(Elig_MHDx) |> count()
 
-VMMwithDxGroupings <- ValidatedVBPMembers %>% 
+VMMwithDxGroupings <- ValidatedVBPMembers |> 
   separate(col = Elig_MHDx,
            into = c("primaryDiagnosisSimplified", "DxSuffix"))
 
@@ -688,7 +679,7 @@ VMMwithDxGroupings <- merge(
 
 #write.csv(VMMbyDiagnosisGroupRange, "./data/output/VBPMeasurementValidation/VMMbyDiagnosisGroupRange.csv")
 
-VMMbyDiagnosisGroupRange <- VMMwithDxGroupings %>% group_by(DiagnosisGroupRange) %>% count()
+VMMbyDiagnosisGroupRange <- VMMwithDxGroupings |> group_by(DiagnosisGroupRange) |> count()
 ```
 
 **Diagnostic Group Ranges**
@@ -737,11 +728,11 @@ Chi squared test was run at alpha = .05
 
 ```{r ChiSq2, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # transform for Chi Squared test
-Comp_ChiSq <- Compliance %>% 
-    select(Match, Gap_Status) %>% 
-  group_by(Match, Gap_Status) %>%
-  #mutate(Numerator = as.character(Numerator)) %>% 
-  count() %>% 
+Comp_ChiSq <- Compliance |> 
+    select(Match, Gap_Status) |> 
+  group_by(Match, Gap_Status) |>
+  #mutate(Numerator = as.character(Numerator)) |> 
+  count() |> 
   pivot_wider(names_from = "Gap_Status",
               values_from = "n")
   # mutate(`0` = as.double(`0`),
@@ -758,15 +749,15 @@ chisq.test(Comp_ChiSq[-1], correct = FALSE)
 
 # Results
 
-The differences observed between matched and non-matched, compliant and non-compliant is are not statistically significant, and may be attributed to error. 
+The differences observed between matched and non-matched, compliant and non-compliant is are not statistically significant, and may be attributed to error. This means that the validity of the HCA Value Based Purchasing Quality Roster (VBPQR) is strong enough to draw inferences from the data. 
 
 ```{r Fig_ChiSq, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 
-Compliance %>% 
-  select(Match, Gap_Status) %>% 
-  group_by(Match, Gap_Status) %>%
-  mutate(Numerator = if_else(Gap_Status == "OPEN", "NonCompliant", "Compliant")) %>% 
-  count() %>% 
+Compliance |> 
+  select(Match, Gap_Status) |> 
+  group_by(Match, Gap_Status) |>
+  mutate(Numerator = if_else(Gap_Status == "OPEN", "NonCompliant", "Compliant")) |> 
+  count() |> 
 ggplot(aes(fill=Match, x=Gap_Status, y=n)) +
   geom_col() +
   scale_fill_manual(values = c(Match = "#5e0932", NoMatch = "#119ec0"))+
@@ -788,6 +779,10 @@ theme_get()+
 
 # Conclusion
 
+The topic became of serious concern to The Alliance very early in our operations. The concern over data validity was prominent among all of the Alliance Providers, and it appeared as though the issue had been persistent for some time. The original Value Based Purchasing Data Validation Model was conducted based on the measurement year (2022-01-01 to 2022-12-31), and on the data product of Arcadia[^8]. That research revealed a significant impact of invalid data and an under-reporting of positive performance. 
+
+Be that as it may, this assessment if for a new year, and an new vendor, Cotivity. We were pleased to find that for the measurement period (2023-01-01 to 2023-02-28), there was NOT a significant variance in the data. This indicates that the data provided by Cotivity, through the HCA VBP Quality Roster, is valid, and can be used to draw inferences with confidence.
+
 # Reviews
 
-1.  
+1.  2023-05-18: The Alliance ACO Executive Leadership review

@@ -1599,10 +1599,12 @@ InLineCode &lt;- data.frame(
 <h1>Overview</h1>
 <p>A study was conducted to validate the measurement of HEDIS My2022 <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> targets
 utilized in Health Choice’s Value-Based Purchasing (VBP) program.
-Monthly Health Choice VBP Quality Reports and Health Choice adjudicated
-claims were used to analyze the validity of reported member events that
-were counted as Eligible for inclusion in the VBP Program measure,
-Follow Up after Hospitalization.</p>
+Monthly Health Choice VBP Quality Reports (VBPQR) and Health Choice
+adjudicated claims were used to analyze the validity of reported member
+events that were counted as Eligible for inclusion in the VBP Program
+measure, Follow Up after Hospitalization. This assessment affirmed that
+the VBPQR for April 2023 was valid and can be used for further
+analysis.</p>
 <div id="purpose" class="section level2">
 <h2>Purpose</h2>
 <p>The purpose of this model is to investigate the nature and accuracy
@@ -1623,11 +1625,11 @@ Health Choice Value Based Purchasing Program. Performance for the
 <strong><em>1/1/2023 - 12/31/2023</em></strong> contract year is
 measured against 3 HEDIS measures endorsed by NCQA. These are
 <em>AMM2</em>, <em>FUH7</em>, and <em>HDO</em>.</p>
-<p>Alliance Providers have reported member events, meaning instances
-that a member is deemed eligible for a given HEDIS measure, have been
-counted as eligible on their VBP Reports; however, the identified member
-<strong>does not</strong> appear on their membership rosters, or in
-their electronic medical record.</p>
+<p>Alliance Providers have reported that member events, meaning
+instances that a member is deemed eligible for a given HEDIS measure,
+have been counted as eligible on their VBP Reports; however, the
+identified member <strong>does not</strong> appear on their membership
+rosters, or in their electronic medical record.</p>
 <p>In addition, it has been reported by multiple providers that the
 number of individuals identified in the FUH7 measure is significantly
 lower than what would be expected, meaning some claims have not been
@@ -1650,7 +1652,7 @@ objective</em></strong></p>
 <p>The business objective is to determine if the Alliance Providers (AP)
 are being measured accurately. Health Choice uses a third party,
 Cotivity<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>, to measure its NCQA HEDIS goals reported
-in the VBP Quality Reports. Concerns have been raised from the providers
+in the VBP Quality Rosters. Concerns have been raised from the providers
 that they have not been educated on the nature of the VBP reports, do
 not have easy access to the reports, and that the measurement results
 are inaccurate. Previous reports have addressed investigations and
@@ -1663,7 +1665,7 @@ the concerns regarding accuracy of measurement.</p>
 NCQA targets</li>
 <li>Conclusion on the question of accuracy of measurement</li>
 <li>A working data model for us as an internal measurement tool,
-separate for Health Choice and its vendor.</li>
+separate from Health Choice and its vendor.</li>
 </ol>
 <p>The internal model can be used in the day-to-day management of
 patient care and provider activity, as well as health plan performance
@@ -1671,7 +1673,7 @@ evaluations and payment.</p>
 <p><strong><em>Situation Assessment</em></strong></p>
 <p>The Alliance Providers had been in the current state of limited
 knowledge concerning VBP reporting for multiple years. The VBP
-Validation Model (Kivela, 2023) provides a tool for viewing and
+Validation Model<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> provides a tool for viewing and
 understanding VBP measurement data at a provider and network level.</p>
 <p>All of the APs stated a desire to utilize the member level data to
 improve practice.</p>
@@ -1679,12 +1681,12 @@ improve practice.</p>
 Goals)</em></strong></p>
 <ol style="list-style-type: decimal">
 <li>Aggregate and evaluate Health Choice Value-Based Purchasing (VBP)
-reports in order to define the population of eligible member events for
-VBP measures.</li>
+Quality Rosters in order to define the population of eligible member
+events for VBP measures.</li>
 <li>Evaluate Health Choice adjudicated claims in order to create a data
 model for the measurement and validation of VBP eligible member
 events.</li>
-<li>Compare Health Choice VBP Quality Reports to Health Choice
+<li>Compare Health Choice VBP Quality Rosters to Health Choice
 adjudicated claims in order to confirm or deny the reported discrepancy
 in FUH7 eligible member events.</li>
 </ol>
@@ -1712,33 +1714,32 @@ true.</p>
 <ol style="list-style-type: decimal">
 <li>Value-based Purchasing Quality Roster
 <ul>
-<li><p>Excel (.xlsx) workbook containing a report of the members
-eligible for VBP HEDIS NCQA measures and their compliance
-status</p></li>
-<li><p>PIVOT tables summarizing the performance of Alliance Providers on
-each measure</p></li>
-<li><p>Member level data is not immediately viewable, but can be
-accessed through the data model management feature of Excel.</p></li>
+<li>Excel (.xlsx) workbook containing a report of the members eligible
+for VBP HEDIS NCQA measures and their compliance status</li>
+<li>PIVOT tables summarizing the performance of Alliance Providers on
+each measure</li>
+<li>Member level data is not immediately viewable, but can be accessed
+through the data model management feature of Excel.</li>
 </ul></li>
 <li>Adjudicated claims
 <ul>
-<li><p>Queried from Health Choice data warehouse</p></li>
-<li><p>Data is extracted using SQL and exported to .csv files for
-processing</p></li>
-<li><p>Minimal processing is done through SQL</p></li>
+<li>Queried from Health Choice data warehouse</li>
+<li>Data is extracted using SQL and exported to .csv files for
+processing</li>
+<li>Minimal processing is done through SQL</li>
 </ul></li>
 </ol>
 <p><strong><em>Key fieldnames and targets</em></strong></p>
 <ol style="list-style-type: decimal">
 <li>Value-based Purchasing Quality Report
 <ul>
-<li><p>MemberID</p></li>
-<li><p>Provider_Shortname</p></li>
+<li>MemberID</li>
+<li>Provider_Shortname</li>
 </ul></li>
 <li>Adjudicated Claims
 <ul>
-<li><p>Health Choice Medicaid ID (~MemberID)</p></li>
-<li><p>svccode (Covered Service Code)</p></li>
+<li>Health Choice Medicaid ID (~MemberID)</li>
+<li>svccode (Covered Service Code)</li>
 </ul></li>
 </ol>
 </div>
@@ -1766,8 +1767,8 @@ like AHCCCS.</li>
 </div>
 <div id="data-preparation" class="section level2">
 <h2>Data Preparation</h2>
-<div id="health-choice-value-based-purchasing-quality-reports-vbp-qr" class="section level3">
-<h3>Health Choice Value-based Purchasing Quality Reports (VBP QR)</h3>
+<div id="health-choice-value-based-purchasing-quality-rosters-vbpqr" class="section level3">
+<h3>Health Choice Value-based Purchasing Quality Rosters (VBPQR)</h3>
 <p>The most recent Value-based Purchasing (VBP) Quality Roster
 (04-27-2023) for each Alliance Provider (AP) was gathered into the
 folder <strong>(./data/VBPReports/Quality)</strong>. The <em>Roster</em>
@@ -1791,9 +1792,10 @@ vbp_sbhs  &lt;-  read_xlsx(&quot;./data/VBPReports/Quality/vbpbhh_report_2023-04
 vbp_shg   &lt;-  read_xlsx(&quot;./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality_Roster.xlsx&quot;, sheet = &quot;Roster&quot;)
 vbp_tgc   &lt;-  read_xlsx(&quot;./data/VBPReports/Quality/vbpbhh_report_2023-04-27_86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality_Roster.xlsx&quot;, sheet = &quot;Roster&quot;)
 
-## if any of the tables pick up rogue columns
-#vbp_cbi &lt;- vbp_cbi [,-1] 
-#colnames(vbp_cbi) &lt;- c(&quot;BCBSAZ Health Choice&quot; ,&quot;...2&quot;, &quot;...3&quot;, &quot;...4&quot;, &quot;...5&quot;, &quot;...6&quot;, &quot;...7&quot;, &quot;...8&quot;, &quot;...9&quot;)
+# Pro Tip
+# if any of the tables pick up rogue columns...
+# vbp_cbi &lt;- vbp_cbi [,-1] 
+# colnames(vbp_cbi) &lt;- c(&quot;BCBSAZ Health Choice&quot; ,&quot;...2&quot;, &quot;...3&quot;, &quot;...4&quot;, &quot;...5&quot;, &quot;...6&quot;, &quot;...7&quot;, &quot;...8&quot;, &quot;...9&quot;)
 
 # Bind the Details sheet from all providers into one table
 DataRaw_VBPQR_AllAPsCombined &lt;- rbind(
@@ -1806,6 +1808,8 @@ DataRaw_VBPQR_AllAPsCombined &lt;- rbind(
   vbp_shg,
   vbp_tgc
 )
+
+# Write to csv
 # date of file = date of VBP QR report
 #write.csv(DataRaw_VBPQR_AllAPsCombined, &quot;./data/output/VBPMeasurementValidation/2023-04-27_DataRaw_VBPQR_AllAPsCombined.csv&quot;)</code></pre>
 <p>The Table, <strong><em>DataRaw_VBPQR_AllAPsCombined,</em></strong> is
@@ -1818,15 +1822,12 @@ descriptions.</p></li>
 <li><p>Promote data from the row with the column names [Row 6] into the
 column headers.</p></li>
 <li><p>Complete the removal of superfluous rows by filtering the
-<em>LOB</em> variable to include only the value <em>HCA</em>.</p></li>
-<li><p>Change the data types of the variables <em>Data Period,
-Numerator, Denominator</em></p></li>
-<li><p>Change the variable name of <em>Denominator</em> to
-<em>TotalEligible</em></p></li>
+<em>NA</em> from the <em>Gap Status</em> variable.</p></li>
+<li><p>Create a variable for Provider Shortnames.</p></li>
 <li><p>Store the transformed data as
 <strong><em>VBPQR_AllAPsCombined_Cleaned</em></strong></p></li>
 </ul>
-<p>The resulting table is a complete, cleaned list of all of the
+<p>The resulting table is a complete, cleaned roster of all of the
 individual member events, for all of the VBP Measures, for all of the
 Alliance Providers.</p>
 <p><strong><em>This table is used to construct the VBP Quality Report
@@ -1835,19 +1836,17 @@ Dashboard as well as the Alliance Progress Report</em></strong></p>
 VBPQR_AllAPsCombined_Cleaned &lt;- DataRaw_VBPQR_AllAPsCombined
 
 # Filter out superfluous rows of nonsense data
-VBPQR_AllAPsCombined_Cleaned &lt;- VBPQR_AllAPsCombined_Cleaned %&gt;%  
+VBPQR_AllAPsCombined_Cleaned &lt;- VBPQR_AllAPsCombined_Cleaned |&gt;  
   filter(`...2` != &quot;NA&quot;)
 
 # Set column names to headers, which get imported on row 1 #5/2/23 - updated from &quot;6&quot; 
 colnames(VBPQR_AllAPsCombined_Cleaned) &lt;- VBPQR_AllAPsCombined_Cleaned [1,] 
 
-# Remove the first row of data that hheaders
+# Remove the first row of data that headers
 VBPQR_AllAPsCombined_Cleaned &lt;- VBPQR_AllAPsCombined_Cleaned[-1,]
 
 # 5/1/23 - Create SubMeasureID
 VBPQR_AllAPsCombined_Cleaned$`SubMeasure ID` &lt;- substr(VBPQR_AllAPsCombined_Cleaned$Measure, 1, 3)
-
-
 
 # # set date format for report date
 # VBPQR_AllAPsCombined_Cleaned$`Data Period` &lt;- as.numeric(VBPQR_AllAPsCombined_Cleaned$`Data Period`)
@@ -1867,7 +1866,7 @@ selected.</p>
 <strong><em>VBPQR_AllAPsCombined_Cleaned2</em></strong> for use
 later.</p>
 <pre class="r"><code># Create a Provider Shortname
-VBPQR_AllAPsCombined_Cleaned &lt;- VBPQR_AllAPsCombined_Cleaned %&gt;% 
+VBPQR_AllAPsCombined_Cleaned &lt;- VBPQR_AllAPsCombined_Cleaned |&gt; 
   mutate(Provider_Shortname = ifelse(`Health Home TIN &amp; Name` == &quot;94-2880847 - COMMUNITY BRIDGES&quot;, &quot;CBI&quot;,
             ifelse(`Health Home TIN &amp; Name` == &quot;86-0215065 - CHANGE POINT INTEGRATED HEALTH&quot;, &quot;CPIH&quot;, 
                    ifelse(`Health Home TIN &amp; Name` == &quot;86-0250938 - LITTLE COLORADO BEHAVIORAL HEALTH&quot;, &quot;LCBHC&quot;, 
@@ -1876,19 +1875,19 @@ VBPQR_AllAPsCombined_Cleaned &lt;- VBPQR_AllAPsCombined_Cleaned %&gt;%
                                         ifelse(`Health Home TIN &amp; Name` == &quot;86-0290033 - SOUTHWEST BEHAVIORAL HEALTH&quot;, &quot;SBHS&quot;, 
                                                ifelse(`Health Home TIN &amp; Name` == &quot;86-0207499 - SPECTRUM HEALTH GROUP&quot;, &quot;SHG&quot;,
                                                       ifelse(`Health Home TIN &amp; Name` == &quot;86-0223720 - THE GUIDANCE CENTER&quot;, &quot;TGC&quot;, NA
-        ))))))))) %&gt;% 
+        ))))))))) |&gt; 
   drop_na(Provider_Shortname)
 
 #write.csv(VBPQR_AllAPsCombined_Cleaned, &quot;./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned_complete_2023-04-27.csv&quot;)</code></pre>
 <pre class="r"><code># create a duplicate at this phase to be used in later evaluation
-VBPQR_AllAPsCombined_Cleaned2 &lt;- VBPQR_AllAPsCombined_Cleaned %&gt;% 
+VBPQR_AllAPsCombined_Cleaned2 &lt;- VBPQR_AllAPsCombined_Cleaned |&gt; 
   filter(`SubMeasure ID` == &quot;FUH&quot;)
 
 #write.csv(VBPQR_AllAPsCombined_Cleaned2, &quot;./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned2.csv&quot;)
 
 # Isolate member ID for the validation
-VBPQR_AllAPsCombined_Cleaned &lt;- VBPQR_AllAPsCombined_Cleaned %&gt;% 
-  filter(`SubMeasure ID` == &quot;FUH&quot;) %&gt;% 
+VBPQR_AllAPsCombined_Cleaned &lt;- VBPQR_AllAPsCombined_Cleaned |&gt; 
+  filter(`SubMeasure ID` == &quot;FUH&quot;) |&gt; 
   select(`Member ID`)
 
 #write.csv(VBPQR_AllAPsCombined_Cleaned, &quot;./data/output/VBPMeasurementValidation/VBP_Validation.csv&quot;)</code></pre>
@@ -1900,11 +1899,116 @@ the period of 04-27-2023, meaning claims adjudicated through 02-28-2023
 in order to be consistent with the VBP Quality Report date ranges. This
 data includes adjudicated claims for members of the Norther GSA, ACC
 health plan, in other words, Alliance Members.</p>
-<p>The resulting solution is exported to .csv and saved as:
-<strong>(./data/data_original_cat_2022-05-01_IPClaims)</strong>. The IP
-Claims data is loaded to the model for analysis. In addition, a data
-frame was loaded that contains the HEDIS My 2023 eligible ICD10
-diagnoses for the FUH7 measure.</p>
+<p>The resulting solution,
+<strong>(./data/data_original_cat_2022-05-01_IPClaims)</strong>, is
+exported to .csv and encrypted in the Azure cloud service. The IP Claims
+data is loaded to the model for analysis. In addition, a data frame was
+loaded that contains the HEDIS My 2023 eligible ICD10 diagnoses for the
+FUH7 measure.</p>
+<pre class="r"><code>-- This is the code to extract IP Claims data from the HCA data warehouse
+-- Updated 5/2/23 by JRK
+
+-- Declare Date Range
+Declare @start as date = &#39;01-01-2023&#39;
+Declare @end as date = &#39;12-31-2023&#39;
+
+SELECT vos.PrimaryID AS VOS_primaryId
+    , id.primaryId AS GM_primaryId
+    , id.AzAhcccsId
+    , id.BCBSMedicaidId AS MemberID
+    , id.lastName
+    , id.firstName
+    , id.dob
+    , id.sex
+    , vos.Age
+    , vos.MemberZipcode
+    , vos.begDate
+    , vos.endDate
+    , vos.svccode
+    , vos.ProcedureCode
+    , vos.RevCode
+    , vos.Placesvc
+    , vos.ProviderType
+    , vos.PrimaryDiagnosis
+    , vos.Dx1
+    , vos.Dx2
+    , vos.Dx3
+    , vos.Dx4
+    , vos.Dx5
+    , vos.Dx6
+    , vos.Dx7
+    , vos.Dx8
+    , vos.Dx9
+    , vos.Dx10
+    , vos.Dx11
+    , vos.Dx12
+    , vos.ProviderName
+    , vos.RenderingProviderNpi
+    , vos.PCPName
+    , vos.calcnetpd
+    , vos.ra
+
+FROM
+claims.dbo.shcavos vos
+LEFT OUTER JOIN GlobalMembers.dbo.ClientIdPlus id ON vos.primaryId = id.primaryId
+
+WHERE vos.EncounterStatus = &#39;AP&#39;
+AND vos.EncounterStatusDate BETWEEN @start and @end
+AND vos.begDate &gt;= @start
+AND MemberACCGSA = &#39;North&#39;
+AND vos.svcCode IN (&#39;99357&#39;,&#39;99356&#39;,&#39;99255&#39;,&#39;99254&#39;,&#39;99253&#39;
+                ,&#39;99252&#39;,&#39;99251&#39;,&#39;99239&#39;,&#39;99238&#39;,&#39;99236&#39;
+                ,&#39;99235&#39;,&#39;99234&#39;,&#39;99233&#39;,&#39;99232&#39;,&#39;99231&#39;
+                ,&#39;99222&#39;,&#39;99221&#39;,&#39;99220&#39;,&#39;99219&#39;,&#39;99218&#39;
+                ,&#39;99217&#39;,&#39;92223&#39;,&#39;0114&#39;,&#39;0124&#39;,&#39;0134&#39;
+                ,&#39;0154&#39;,&#39;0116&#39;,&#39;0126&#39;,&#39;0136&#39;,&#39;0156&#39;,&#39;0110&#39;
+                ,&#39;0111&#39;,&#39;0112&#39;,&#39;0113&#39;,&#39;0120&#39;,&#39;0121&#39;,&#39;0122&#39;
+                ,&#39;0123&#39;,&#39;0130&#39;,&#39;0131&#39;,&#39;0132&#39;,&#39;0133&#39;,&#39;0150&#39;
+                ,&#39;0151&#39;,&#39;0152&#39;,&#39;0153&#39;,&#39;0160&#39;,&#39;0200&#39;,&#39;0201&#39;
+                ,&#39;0202&#39;,&#39;0203&#39;,&#39;0206&#39;,&#39;0209&#39;,&#39;0210&#39;,&#39;0115&#39;
+                ,&#39;0117&#39;,&#39;0118&#39;,&#39;0116&#39;,&#39;0125&#39;,&#39;0127&#39;,&#39;0128&#39;
+                ,&#39;0129&#39;,&#39;0135&#39;,&#39;0137&#39;,&#39;0138&#39;,&#39;0139&#39;,&#39;0155&#39;
+                ,&#39;0157&#39;,&#39;0158&#39;,&#39;0159&#39;,&#39;0164&#39;,&#39;0167&#39;,&#39;0163&#39;
+                ,&#39;0190&#39;,&#39;0191&#39;,&#39;0192&#39;,&#39;0193&#39;,&#39;0194&#39;,&#39;0199&#39;
+                ,&#39;0204&#39;,&#39;0207&#39;,&#39;0208&#39;,&#39;0211&#39;,&#39;0212&#39;,&#39;0213&#39;
+                ,&#39;0214&#39;,&#39;0219&#39;)
+
+GROUP BY vos.PrimaryID
+    , id.primaryId
+    , id.AzAhcccsId
+    , id.BCBSMedicaidId
+    , id.lastName
+    , id.firstName
+    , id.dob
+    , id.sex
+    , vos.Age
+    , vos.MemberZipcode
+    , vos.begDate
+    , vos.endDate
+    , vos.svccode
+    , vos.ProcedureCode
+    , vos.RevCode
+    , vos.Placesvc
+    , vos.ProviderType
+    , vos.PrimaryDiagnosis
+    , vos.Dx1
+    , vos.Dx2
+    , vos.Dx3
+    , vos.Dx4
+    , vos.Dx5
+    , vos.Dx6
+    , vos.Dx7
+    , vos.Dx8
+    , vos.Dx9
+    , vos.Dx10
+    , vos.Dx11
+    , vos.Dx12
+    , vos.ProviderName
+    , vos.RenderingProviderNpi
+    , vos.PCPName
+    , vos.primaryDiagnosis
+    , calcnetpd
+    , vos.ra</code></pre>
 <pre class="r"><code>IPClaims &lt;- read_xlsx(&quot;./data/data_original_cat_2023-05-01_IPClaims.xlsx&quot;, sheet = &quot;Sheet1&quot;)
 MHDxCodes &lt;- read.csv(&quot;./data/data_reference_MHDxCodes.csv&quot;)</code></pre>
 <p>The IPClaims data was transformed in the following ways to prepare it
@@ -1914,8 +2018,8 @@ Provider_ShortName &lt;- (c(&quot;CBI&quot;, &quot;CPIH&quot;, &quot;EHS&quot;, 
 # Create a vector of ICD10 codes for behavioral health
 MH_Dx &lt;- MHDxCodes$Code
 # Transform data
-IPClaims_Summary &lt;- IPClaims %&gt;% 
-  filter(ra %in% Provider_ShortName) %&gt;% 
+IPClaims_Summary &lt;- IPClaims |&gt; 
+  filter(ra %in% Provider_ShortName) |&gt; 
   mutate(Elig_MHDx = if_else(PrimaryDiagnosis %in% MH_Dx, PrimaryDiagnosis,
                              if_else(Dx1 %in% MH_Dx, Dx1,
                                      if_else(Dx2 %in% MH_Dx, Dx2,
@@ -1929,14 +2033,14 @@ IPClaims_Summary &lt;- IPClaims %&gt;%
                      if_else(Dx10 %in% MH_Dx, Dx10,
                              if_else(Dx11 %in% MH_Dx, Dx11,
                                      if_else(Dx12 %in% MH_Dx, Dx12, &quot;NotBH&quot;
-                                     )))))))))))))) %&gt;% 
+                                     )))))))))))))) |&gt; 
   filter(Elig_MHDx != &quot;NotBH&quot;) 
 
 #write.csv(IPClaims_Summary, &quot;./data/output/VBPMeasurementValidation/IPClaims_Summary.csv&quot;)</code></pre>
 <ol style="list-style-type: decimal">
-<li><p>Claims are filtered to only include Alliance Providers. There
+<li><p>IPClaims are filtered to only include Alliance Providers. There
 were 3259 claims that were assigned to APs.</p></li>
-<li><p>Claims are then filtered to include only those that have a
+<li><p>IPClaims are then filtered to include only those that have a
 qualifying HEDIS My 2023 eligible inpatient code, using
 <strong><em>IP_Code_CPT</em></strong> and
 <strong><em>IP_Code_UBREV</em></strong>, AND an associated eligible
@@ -1946,7 +2050,7 @@ diagnosis variables in the claim. There are 13 variables for diagnoses,
 from <em>Primary Diagnosis</em> to <em>Dx12</em>.</p></li>
 <li><p>The resulting table is
 <strong><em>IPClaims_Summary</em></strong></p>
-<ol style="list-style-type: decimal">
+<ol style="list-style-type: upper-alpha">
 <li>The resulting table contains all of the claims from Health Choice
 adjudicated claims, for those cases where there was an eligible FUH7
 Inpatient code, AND and eligible Mental Health Diagnosis code, within
@@ -1956,7 +2060,7 @@ the VBP reporting period.</li>
 <p>The variables <em>MemberID</em> and <em>svccode</em> were selected
 into a separate data frame, called
 <strong><em>IPClaims_Validation</em></strong> for further analysis.</p>
-<pre class="r"><code>IPClaims_validation &lt;- IPClaims_Summary %&gt;% 
+<pre class="r"><code>IPClaims_validation &lt;- IPClaims_Summary |&gt; 
   select(MemberID,
          svccode)
 
@@ -1997,9 +2101,9 @@ was loaded to the test model. The data was summarized, per member, by
 counting the instances of eligibility per member. This creates a vector
 of unduplicated Member IDs called
 <strong><em>VBP_Unduplicated</em></strong>.</p>
-<pre class="r"><code>VBP_Unduplicated &lt;- VBPQR_AllAPsCombined_Cleaned %&gt;% 
-  group_by(`Member ID`) %&gt;% 
-  rename(&quot;MemberID&quot; = `Member ID`) %&gt;% 
+<pre class="r"><code>VBP_Unduplicated &lt;- VBPQR_AllAPsCombined_Cleaned |&gt; 
+  group_by(`Member ID`) |&gt; 
+  rename(&quot;MemberID&quot; = `Member ID`) |&gt; 
   count()
 
 #write.csv(VBP_Unduplicated, &quot;./data/output/VBPMeasurementValidation/VBP_Unduplicated.csv&quot;)</code></pre>
@@ -2009,9 +2113,9 @@ loaded to the test model. The claims data was then summarized by
 counting the instances of HEDIS My2022 eligible claims per member. This
 creates a vector of unduplicated Member IDs called
 <strong><em>Claims_Unduplicated</em></strong>.</p>
-<pre class="r"><code>IPClaims_Unduplicated &lt;- IPClaims_validation %&gt;% 
-  filter(MemberID != &quot;NULL&quot;) %&gt;% 
-  group_by(MemberID) %&gt;% 
+<pre class="r"><code>IPClaims_Unduplicated &lt;- IPClaims_validation |&gt; 
+  filter(MemberID != &quot;NULL&quot;) |&gt; 
+  group_by(MemberID) |&gt; 
   count()
 
 #write.csv(IPClaims_Unduplicated, &quot;./data/output/VBPMeasurementValidation/IPClaims_Unduplicated.csv&quot;)</code></pre>
@@ -2036,9 +2140,9 @@ against a Claims MemberID</p>
   merge(x = VBP_Unduplicated,
         y = IPClaims_Unduplicated,
         by = &quot;MemberID&quot;,
-        all = TRUE) %&gt;% 
+        all = TRUE) |&gt; 
   rename(&quot;VBP&quot; = n.x,
-         &quot;claims&quot; = n.y) %&gt;% 
+         &quot;claims&quot; = n.y) |&gt; 
   mutate(Match = if_else((is.na(VBP) | is.na(claims)), &quot;NoMatch&quot;, &quot;Match&quot;))
 
 #write.csv(Validation_Matrix, &quot;./data/output/VBPMeasurementValidation/ValidationMatrix.csv&quot;)</code></pre>
@@ -2084,8 +2188,8 @@ evaluation! Phew! :)</em></strong></p>
 </div>
 <div id="evaluation" class="section level2">
 <h2>Evaluation</h2>
-<pre class="r"><code>Validation_Summary &lt;- Validation_Matrix %&gt;% 
-  group_by(Match) %&gt;% 
+<pre class="r"><code>Validation_Summary &lt;- Validation_Matrix |&gt; 
+  group_by(Match) |&gt; 
   count()
 
 #write.csv(Validation_Summary, &quot;./data/output/VBPMeasurementValidation/Validation_Summary.csv&quot;)</code></pre>
@@ -2106,11 +2210,6 @@ eligible IP member, with 197 (0.6816609) not matched.</li>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<p>The initial results suggest possible significance. Only 0.3183391 of
-the members identified by the VBP QR as eligible for the FUH7 measure
-actually appear in an adjudicated claim for an eligible Inpatient code.
-A low percentage here could result in mis-reporting of performance
-scores to the detriment of the Alliance.</p>
 <div id="creation-of-fuh7-member-follow-up-list" class="section level3">
 <h3>Creation of FUH7 Member Follow Up List</h3>
 <p>The <strong><em>Validation_Matrix</em></strong> was transformed and
@@ -2122,14 +2221,14 @@ the Member Follow Up List</em></strong> for the <em>FUH7</em>
 measure.</p>
 <pre class="r"><code># seperate the match list from the no match list
 
-ValidatedVBPMembers &lt;- Validation_Matrix %&gt;% 
+ValidatedVBPMembers &lt;- Validation_Matrix |&gt; 
   filter(Match == &quot;Match&quot;)
   
-ValMat_NoMatch &lt;- Validation_Matrix %&gt;% 
+ValMat_NoMatch &lt;- Validation_Matrix |&gt; 
   filter(Match == &quot;NoMatch&quot;)
 
 # Using the copy of VBPQR_AllAPsCombined_Cleaned we made above, rename MemberID to match
-VBPQR_AllAPsCombined_Cleaned2 &lt;- VBPQR_AllAPsCombined_Cleaned2 %&gt;%
+VBPQR_AllAPsCombined_Cleaned2 &lt;- VBPQR_AllAPsCombined_Cleaned2 |&gt;
   rename(&quot;MemberID&quot; = `Member ID`)
 
 # Rejoin the matched and non-matched MemberIDs to their claims data
@@ -2137,7 +2236,7 @@ ValidatedVBPMembers &lt;-
    merge(x = ValidatedVBPMembers,
         y = IPClaims_Summary,
         by = &quot;MemberID&quot;,
-        all.x = TRUE) %&gt;%
+        all.x = TRUE) |&gt;
   drop_na(Match)
 
 #write.csv(ValidatedVBPMembers,&quot;./data/output/VBPMeasurementValidation/ValidatedVBPMembers.csv&quot;)
@@ -2146,7 +2245,7 @@ ValMat_NoMatch &lt;-
    merge(x = ValMat_NoMatch,
         y = VBPQR_AllAPsCombined_Cleaned2,
         by = &quot;MemberID&quot;,
-        all.x = TRUE) %&gt;%
+        all.x = TRUE) |&gt;
   drop_na(Match)
 
 #write.csv(ValMat_NoMatch,&quot;./data/output/VBPMeasurementValidation/ValMat_NoMatch.csv&quot;)
@@ -2155,7 +2254,7 @@ MemberFollowUpList &lt;-
    merge(x = Validation_Matrix,
         y = IPClaims_Summary,
         by = &quot;MemberID&quot;,
-        all = TRUE) %&gt;%
+        all = TRUE) |&gt;
   drop_na(Match)
 
 #write.csv(MemberFollowUpList,&quot;./data/output/VBPMeasurementValidation/MemberFollowUpList.csv&quot;)</code></pre>
@@ -2166,10 +2265,7 @@ MemberFollowUpList &lt;-
 adjudicated claim were evaluated in several ways, including all eligible
 FUH7 eligible IP Claims (ValidatedVBPMembers):</p>
 <ol style="list-style-type: decimal">
-<li>By provider type:
-<ul>
-<li>There were 1096 types observed</li>
-</ul></li>
+<li>By provider type:</li>
 </ol>
 <p><strong>Top 10 Provider Types</strong></p>
 <pre class="r"><code>ValidatedVBPMembers |&gt; 
@@ -2249,10 +2345,7 @@ B5
 </tbody>
 </table>
 <ol start="2" style="list-style-type: decimal">
-<li>By service code:
-<ul>
-<li>1096 svccodes were used</li>
-</ul></li>
+<li>By service code:</li>
 </ol>
 <p><strong>Top 10 Service Codes</strong></p>
 <pre class="r"><code>ValidatedVBPMembers |&gt; 
@@ -2359,18 +2452,18 @@ n
 <li>By age:
 <ul>
 <li>Many different ages between age 7 and 79</li>
+<li>Histogram below is for all validated member events</li>
 </ul></li>
 </ol>
 <p><strong>Histogram of Ages</strong></p>
 <pre class="r"><code># Group by age
-# ValidatedVBPMembers %&gt;% group_by(Age) %&gt;% nrow()
+# ValidatedVBPMembers |&gt; group_by(Age) |&gt; nrow()
 
 hist(ValidatedVBPMembers$Age)</code></pre>
 <p><img src="data:image/png;base64,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xQNunQD1eV8HW/IABCjFQysecOsEqM/7OtiSByBAKR5a8YBbJ0B93tfBljwAAUrx0IoH3DoB6vO+DrbkAQhQiodWPODWCVCf93WwJQ9AgFI8tOIBt06A+ryvgy15AAKU4qEVD7h1AtTnfR1syQMQoBQPrXjArROgPu/rYEsegACleGjFA26dAPV5Xwdb8gAEKMVDKx5w6wSoz/s62JIHIEApHlrxgFsXvmm8aOeiObQ1eg625AEIUIqHVjzg1glQDwTogLVDcYrrqE7xnuKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6PnYEsegACleGjFA2495OKiObQ1eg625AEIUIqHVjzg1kMuLppDW6NHegGr6w8XFxe/XH/2eC0BSvHQigfcesjFPdJlN2SX/PFVUnv01vXlBCjFQysecOshF3eNlp2RXPLN06Tp6Ce3AgQoxUMrHnDrIRd3DqddEVzycp6G5vFp7kH6h9mZUwUClOKhFQ+49ZCLu8fTjsgt+duTTWC+Nh642gTqnV9dShCgFA+teMCth1zcJVZ2Sm7Jl0k7LtNIPXEpQYBSPLTiAbce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" width="672" /></p>
 <ol start="4" style="list-style-type: decimal">
-<li>By Diagnosis:
+<li><p>By Diagnosis:</p>
 <ul>
-<li><p>There were 1096 distinct diagnoses used</p></li>
 <li><p>That is too many distinct diagnoses for this evaluation, so
 diagnoses were grouped into ICD 10 mental health groupings (see table
 below).</p></li>
@@ -2385,7 +2478,7 @@ Disorders among inpatient services.</p></li>
 ICD10Groupings &lt;- read.csv(&quot;./data/dataModel/ICD10andBHGroupingsCombined.csv&quot;)
 
 # Create column with first found BHDx
-VMMwithDxGroupings &lt;- ValidatedVBPMembers %&gt;% 
+VMMwithDxGroupings &lt;- ValidatedVBPMembers |&gt; 
   mutate(Elig_MHDx = if_else(PrimaryDiagnosis %in% MH_Dx, PrimaryDiagnosis,
                              if_else(Dx1 %in% MH_Dx, Dx1,
                                      if_else(Dx2 %in% MH_Dx, Dx2,
@@ -2400,9 +2493,9 @@ VMMwithDxGroupings &lt;- ValidatedVBPMembers %&gt;%
                                                                                                              if_else(Dx11 %in% MH_Dx, Dx11,
                                                                                                                      if_else(Dx12 %in% MH_Dx, Dx12, &quot;NotBH&quot;                                                                             ))))))))))))))
 # Group by Dx
-# ValidatedVBPMembers %&gt;% group_by(Elig_MHDx) %&gt;% count()
+# ValidatedVBPMembers |&gt; group_by(Elig_MHDx) |&gt; count()
 
-VMMwithDxGroupings &lt;- ValidatedVBPMembers %&gt;% 
+VMMwithDxGroupings &lt;- ValidatedVBPMembers |&gt; 
   separate(col = Elig_MHDx,
            into = c(&quot;primaryDiagnosisSimplified&quot;, &quot;DxSuffix&quot;))
 
@@ -2416,7 +2509,7 @@ VMMwithDxGroupings &lt;- merge(
 
 #write.csv(VMMbyDiagnosisGroupRange, &quot;./data/output/VBPMeasurementValidation/VMMbyDiagnosisGroupRange.csv&quot;)
 
-VMMbyDiagnosisGroupRange &lt;- VMMwithDxGroupings %&gt;% group_by(DiagnosisGroupRange) %&gt;% count()</code></pre>
+VMMbyDiagnosisGroupRange &lt;- VMMwithDxGroupings |&gt; group_by(DiagnosisGroupRange) |&gt; count()</code></pre>
 <p><strong>Diagnostic Group Ranges</strong></p>
 <pre class="r"><code>kable(VMMbyDiagnosisGroupRange)</code></pre>
 <table>
@@ -2502,11 +2595,11 @@ colnames(Compliance)[6] &lt;- &quot;Gap_Status&quot;
 <p>Q: What is the impact of the non-Matched member events?</p>
 <p>Chi squared test was run at alpha = .05</p>
 <pre class="r"><code># transform for Chi Squared test
-Comp_ChiSq &lt;- Compliance %&gt;% 
-    select(Match, Gap_Status) %&gt;% 
-  group_by(Match, Gap_Status) %&gt;%
-  #mutate(Numerator = as.character(Numerator)) %&gt;% 
-  count() %&gt;% 
+Comp_ChiSq &lt;- Compliance |&gt; 
+    select(Match, Gap_Status) |&gt; 
+  group_by(Match, Gap_Status) |&gt;
+  #mutate(Numerator = as.character(Numerator)) |&gt; 
+  count() |&gt; 
   pivot_wider(names_from = &quot;Gap_Status&quot;,
               values_from = &quot;n&quot;)
   # mutate(`0` = as.double(`0`),
@@ -2527,12 +2620,14 @@ Comp_ChiSq &lt;- Compliance %&gt;%
 <h1>Results</h1>
 <p>The differences observed between matched and non-matched, compliant
 and non-compliant is are not statistically significant, and may be
-attributed to error.</p>
-<pre class="r"><code>Compliance %&gt;% 
-  select(Match, Gap_Status) %&gt;% 
-  group_by(Match, Gap_Status) %&gt;%
-  mutate(Numerator = if_else(Gap_Status == &quot;OPEN&quot;, &quot;NonCompliant&quot;, &quot;Compliant&quot;)) %&gt;% 
-  count() %&gt;% 
+attributed to error. This means that the validity of the HCA Value Based
+Purchasing Quality Roster (VBPQR) is strong enough to draw inferences
+from the data.</p>
+<pre class="r"><code>Compliance |&gt; 
+  select(Match, Gap_Status) |&gt; 
+  group_by(Match, Gap_Status) |&gt;
+  mutate(Numerator = if_else(Gap_Status == &quot;OPEN&quot;, &quot;NonCompliant&quot;, &quot;Compliant&quot;)) |&gt; 
+  count() |&gt; 
 ggplot(aes(fill=Match, x=Gap_Status, y=n)) +
   geom_col() +
   scale_fill_manual(values = c(Match = &quot;#5e0932&quot;, NoMatch = &quot;#119ec0&quot;))+
@@ -2551,11 +2646,25 @@ theme_get()+
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
+<p>The topic became of serious concern to The Alliance very early in our
+operations. The concern over data validity was prominent among all of
+the Alliance Providers, and it appeared as though the issue had been
+persistent for some time. The original Value Based Purchasing Data
+Validation Model was conducted based on the measurement year (2022-01-01
+to 2022-12-31), and on the data product of Arcadia<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>. That research
+revealed a significant impact of invalid data and an under-reporting of
+positive performance.</p>
+<p>Be that as it may, this assessment if for a new year, and an new
+vendor, Cotivity. We were pleased to find that for the measurement
+period (2023-01-01 to 2023-02-28), there was NOT a significant variance
+in the data. This indicates that the data provided by Cotivity, through
+the HCA VBP Quality Roster, is valid, and can be used to draw inferences
+with confidence.</p>
 </div>
 <div id="reviews" class="section level1">
 <h1>Reviews</h1>
 <ol style="list-style-type: decimal">
-<li></li>
+<li>2023-05-18: The Alliance ACO Executive Leadership review</li>
 </ol>
 </div>
 <div class="footnotes footnotes-end-of-document">
@@ -2563,13 +2672,19 @@ theme_get()+
 <ol>
 <li id="fn1"><p><a href="https://www.ncqa.org/hedis/" class="uri">https://www.ncqa.org/hedis/</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 <li id="fn2"><p><a href="https://www.healthchoiceaz.com/" class="uri">https://www.healthchoiceaz.com/</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>www.narbha.org<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://www.narbha.org/" class="uri">https://www.narbha.org/</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
 <li id="fn4"><p><a href="https://www.azahcccs.gov/AHCCCS/Initiatives/AHCCCSCompleteCare/" class="uri">https://www.azahcccs.gov/AHCCCS/Initiatives/AHCCCSCompleteCare/</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
 <li id="fn5"><p><a href="https://www.ibm.com/docs/it/spss-modeler/saas?topic=dm-crisp-help-overview" class="uri">https://www.ibm.com/docs/it/spss-modeler/saas?topic=dm-crisp-help-overview</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
 <li id="fn6"><p><a href="https://www.cotiviti.com/" class="uri">https://www.cotiviti.com/</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
 <li id="fn7"><p>Kivela J.R., McMillian, J. &amp; Tewa, V. (2023)
 Alliance ACO Progress Report, January 2023. <em>The Northern Arizona
 Regional Behavioral Health Authority</em>.<a href="#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p>Kivela, J.R. (2023). Value Based Purchasing Data
+Validation Model. The Northern Arizona Regional Behavioral Health
+Alliance<a href="#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn9"><p>Kivela, J.R. (2023). Value Based Purchasing Data
+Validation Model. The Northern Arizona Regional Behavioral Health
+Alliance<a href="#fnref9" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
