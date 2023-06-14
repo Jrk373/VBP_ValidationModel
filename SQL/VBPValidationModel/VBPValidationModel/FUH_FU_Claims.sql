@@ -1,4 +1,4 @@
--- This is the code for extracting the follow up after hospitalization claims from the HCA data warehouse
+-- This is the code to extract FU Claims data from the HCA data warehouse
 -- Updated 5/2/23 by JRK
 
 -- Declare Date Range
@@ -49,7 +49,8 @@ WHERE vos.EncounterStatus = 'AP'
 AND vos.EncounterStatusDate BETWEEN @start and @end
 AND vos.begDate >= @start
 AND MemberACCGSA = 'North'
-AND vos.svccode in ('90791','90792','90832','90833','90834'
+-- FU Codes
+AND vos.svcCode IN ('90791','90792','90832','90833','90834'
 				,'90836','90837','90838','90839','90840'
 				,'90845','90847','90849','90853','90870'
 				,'90875','90876','98960','98961','98962'
@@ -78,3 +79,40 @@ AND vos.svccode in ('90791','90792','90832','90833','90834'
 				,'H2011','H2012','H2013','H2014','H2015'
 				,'H2016','H2017','H2018','H2019','H2020'
 				,'S0201','S9480','S9484','S9485','T1015')
+
+GROUP BY vos.PrimaryID
+	, id.primaryId
+	, id.AzAhcccsId
+	, id.BCBSMedicaidId
+	, id.lastName
+	, id.firstName
+	, id.dob
+	, id.sex
+	, vos.Age
+	, vos.MemberZipcode
+	, vos.begDate
+	, vos.endDate
+	, vos.svccode
+	, vos.ProcedureCode
+	, vos.RevCode
+	, vos.Placesvc
+	, vos.ProviderType
+	, vos.PrimaryDiagnosis
+	, vos.Dx1
+	, vos.Dx2
+	, vos.Dx3
+	, vos.Dx4
+	, vos.Dx5
+	, vos.Dx6
+	, vos.Dx7
+	, vos.Dx8
+	, vos.Dx9
+	, vos.Dx10
+	, vos.Dx11
+	, vos.Dx12
+	, vos.ProviderName
+	, vos.RenderingProviderNpi
+	, vos.PCPName
+	, vos.primaryDiagnosis
+	, calcnetpd
+	, vos.ra
