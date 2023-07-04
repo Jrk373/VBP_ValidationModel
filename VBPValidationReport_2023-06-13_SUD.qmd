@@ -422,7 +422,9 @@ IPClaims_Summary <- IPClaims |>
                                      )))))))))))))) |> 
   filter(Elig_MHDx != "NotBH") 
 
-IPClaims_Summary <- IPClaims_Summary |> 
+write.csv(IPClaims_Summary, "./data/output/VBPMeasurementValidation/IPClaims_Summary.csv")
+
+IPClaims_SummarySUD <- IPClaims_Summary |> 
   mutate(SUD_Dx = if_else(PrimaryDiagnosis %in% SUD_Dx, PrimaryDiagnosis,
                              if_else(Dx1 %in% SUD_Dx, Dx1,
                                      if_else(Dx2 %in% SUD_Dx, Dx2,
@@ -438,10 +440,10 @@ IPClaims_Summary <- IPClaims_Summary |>
                                      if_else(Dx12 %in% SUD_Dx, Dx12, "NotSUD"
                                      )))))))))))))) 
 
-IPClaims_Summary <- IPClaims_Summary |>
+IPClaims_SummarySUD <- IPClaims_SummarySUD |>
   mutate(CoOccuring = if_else(Elig_MHDx != "NotBH" & SUD_Dx != "NotSUD", 1, 0))
 
- write.csv(IPClaims_Summary, "./data/output/VBPMeasurementValidation/IPClaims_Summary.csv")
+ write.csv(IPClaims_SummarySUD, "./data/output/VBPMeasurementValidation/IPClaims_SummarySUD.csv")
   
 ```
 
@@ -818,6 +820,8 @@ There a significant variance in the data indicated a disproportionate frequency 
 **In other words, the Alliance and its providers are being underrated by the HC Value Based Purchasing Quality Roster as evidenced by Health Choice Adjudicated Claims.**
 
 Further investigation into this data is required in order to validate measurement. Within the Member Follow Up List, only those cases identified as "Match" may be relied upon for validity. 
+
+# homelessness
 
 # Reviews
 
