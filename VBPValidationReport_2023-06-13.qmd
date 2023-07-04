@@ -258,6 +258,9 @@ VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |>
   drop_na(Provider_Shortname)
 
 # write.csv(VBPQR_AllAPsCombined_Cleaned, "./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned_complete_2023-05-31.csv")
+
+# write.csv(VBPQR_AllAPsCombined_Cleaned, "C:/Users/KGLtd/OneDrive - The NARBHA Institute/Documents - Data Force/Projects/AllianceIntranetSupport/data/VBPQR_AllAPsCombined_Cleaned_complete.csv")
+
 ```
 
 ```{r transform_MasterVBP3, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -595,7 +598,9 @@ MemberFollowUpList <-
         all = TRUE) |>
   drop_na(Match)
 
-# write.csv(MemberFollowUpList,"./data/output/VBPMeasurementValidation/MemberFollowUpList.csv")
+# write.csv(MemberFollowUpList,"./data/output/VBPMeasurementValidation/FUH7_MemberFollowUpList.csv")
+
+# write.csv(MemberFollowUpList,"C:/Users/KGLtd/OneDrive - The NARBHA Institute/Documents - Data Force/Projects/AllianceIntranetSupport/data/FUH7_MemberFollowUpList.csv")
 ```
 
 ### Evaluation of Validated Data
@@ -713,6 +718,8 @@ Compliance <-
 colnames(Compliance)[6] <- "Gap_Status"
 #####
 # write.csv(Compliance, "./data/output/VBPMeasurementValidation/Compliance.csv")
+
+write.csv(Compliance, "C:/Users/RyanK/OneDrive - The NARBHA Institute/Documents - Data Force/Projects/AllianceIntranetSupport/data/Compliance.csv")
 ```
 
 -   `r Compliance |> filter(Gap_Status == "OPEN") |> nrow()` Non-Compliant
