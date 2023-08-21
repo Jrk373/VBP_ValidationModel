@@ -3,7 +3,7 @@
 
 -- Declare Date Range
 Declare @start as date = '01-01-2023'
-Declare @end as date = '12-31-2023'
+Declare @end as date = '06-30-2023'
 
 SELECT vos.PrimaryID AS VOS_primaryId
 	, id.primaryId AS GM_primaryId

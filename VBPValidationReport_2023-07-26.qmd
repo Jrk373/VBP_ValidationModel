@@ -33,9 +33,9 @@ library(scales)
 
 # table for inline code
 InLineCode <- data.frame(
-  ReportDate = "05-31-2023",
+  ReportDate = "7/21/23",
   MeasurementYear = "01-01-2023 - 12-31-2023",
-  ClaimsAdjudicatedThrough = "03-31-2023",
+  ClaimsAdjudicatedThrough = "06-30-2023",
   HEDISVersion = "My 2023",
   var5 = "Text"
 )
@@ -163,16 +163,16 @@ The most recent Value-based Purchasing (VBP) Quality Roster (`r InLineCode$Repor
 ```{r data_read_VBPQR, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 # Import the unaltered VBP report, "Detail" sheet, as received from HCA
 # 5/1/23 sheet = "Detail" was change by HCA to sheet = "Roster"
-vbp_cbi   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-05-31_94-2880847_Community_Bridges_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_cbi   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-07-21_94-2880847_Community_Bridges_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 ##  vbp_cbi <- vbp_cbi [,-1] 
 ##  colnames(vbp_cbi) <- c("BCBSAZ Health Choice" ,"...2", "...3", "...4", "...5", "...6", "...7", "...8", "...9")
-vbp_cpih  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-05-31_86-0215065_Change_Point_Integrated_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
-vbp_lcbhc <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-05-31_86-0250938_Little_Colorado_Behavioral_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
-vbp_mmhc  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-05-31_86-0214457_Mohave_Mental_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
-vbp_ph    <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-05-31_86-0206928_Polara_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
-vbp_sbhs  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-05-31_86-0290033_Southwest_Behavioral_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
-vbp_shg   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-05-31_86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
-vbp_tgc   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-05-31_86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_cpih  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-07-21_86-0215065_Change_Point_Integrated_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_lcbhc <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-07-21_86-0250938_Little_Colorado_Behavioral_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_mmhc  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-07-21_86-0214457_Mohave_Mental_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_ph    <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-07-21_86-0206928_Polara_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_sbhs  <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-07-21_86-0290033_Southwest_Behavioral_Health_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_shg   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-07-21_86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
+vbp_tgc   <-  read_xlsx("./data/VBPReports/Quality/vbpbhh_report_2023-07-21_86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality_Roster.xlsx", sheet = "Roster")
 
 # Pro Tip
 # if any of the tables pick up rogue columns...
@@ -191,9 +191,9 @@ DataRaw_VBPQR_AllAPsCombined <- rbind(
   vbp_tgc
 )
 
-# # write to csv
+# write to csv
 # date of file = date of VBP QR report
-# write.csv(DataRaw_VBPQR_AllAPsCombined, "./data/output/VBPMeasurementValidation/2023-05-31_DataRaw_VBPQR_AllAPsCombined.csv")
+write.csv(DataRaw_VBPQR_AllAPsCombined, "./data/output/VBPMeasurementValidation/2023-07-21_DataRaw_VBPQR_AllAPsCombined.csv")
 ```
 
 The Table, ***DataRaw_VBPQR_AllAPsCombined,*** is then transformed in order to remove superfluous white space and other text and table titles that were imported by default. The key transformations are:
@@ -257,7 +257,10 @@ VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |>
         ))))))))) |> 
   drop_na(Provider_Shortname)
 
-# write.csv(VBPQR_AllAPsCombined_Cleaned, "./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned_complete_2023-05-31.csv")
+write.csv(VBPQR_AllAPsCombined_Cleaned, "./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned_complete_2023-07-21.csv")
+
+write.csv(VBPQR_AllAPsCombined_Cleaned, "C:/Users/KGLtd/OneDrive - The NARBHA Institute/Documents - Data Force/Projects/AllianceIntranetSupport/data/VBPQR_AllAPsCombined_Cleaned_complete.csv")
+
 ```
 
 ```{r transform_MasterVBP3, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
@@ -265,14 +268,14 @@ VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |>
 VBPQR_AllAPsCombined_Cleaned2 <- VBPQR_AllAPsCombined_Cleaned |> 
   filter(`SubMeasure ID` == "FUH")
 
-# write.csv(VBPQR_AllAPsCombined_Cleaned2, "./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned2.csv")
+write.csv(VBPQR_AllAPsCombined_Cleaned2, "./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned2.csv")
 
 # Isolate member ID for the validation
 VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |> 
   filter(`SubMeasure ID` == "FUH") |> 
   select(`Member ID`)
 
-# write.csv(VBPQR_AllAPsCombined_Cleaned, "./data/output/VBPMeasurementValidation/VBP_Validation.csv")
+write.csv(VBPQR_AllAPsCombined_Cleaned, "./data/output/VBPMeasurementValidation/VBP_Validation.csv")
 
 ```
 
@@ -392,7 +395,6 @@ GROUP BY vos.PrimaryID
 ```{r data_IPClaims, include=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
 IPClaims <- read_xlsx("./data/data_original_cat_2023-03-31_IPClaims.xlsx", sheet = "Sheet1")
 MHDxCodes <- read.csv("./data/data_reference_MHDxCodes.csv")
-SUDDxCodes <- read.csv("./data/data_reference_SUDDxCodes.csv")
 ```
 
 The IPClaims data was transformed in the following ways to prepare it for analysis:
@@ -402,7 +404,6 @@ The IPClaims data was transformed in the following ways to prepare it for analys
 Provider_ShortName <- (c("CBI", "CPIH", "EHS", "LCBHC", "MMHC", "SHG", "SBH", "TGC", "Polara"))
 # Create a vector of ICD10 codes for behavioral health
 MH_Dx <- MHDxCodes$Code
-SUD_Dx <- SUDDxCodes$Code
 # Transform data
 IPClaims_Summary <- IPClaims |> 
   filter(ra %in% Provider_ShortName) |> 
@@ -423,27 +424,6 @@ IPClaims_Summary <- IPClaims |>
   filter(Elig_MHDx != "NotBH") 
 
 write.csv(IPClaims_Summary, "./data/output/VBPMeasurementValidation/IPClaims_Summary.csv")
-
-IPClaims_SummarySUD <- IPClaims_Summary |> 
-  mutate(SUD_Dx = if_else(PrimaryDiagnosis %in% SUD_Dx, PrimaryDiagnosis,
-                             if_else(Dx1 %in% SUD_Dx, Dx1,
-                                     if_else(Dx2 %in% SUD_Dx, Dx2,
-                                             if_else(Dx3 %in% SUD_Dx, Dx3,
-                                                     if_else(Dx4 %in% SUD_Dx, Dx4,
-                     if_else(Dx5 %in% SUD_Dx, Dx5,
-                             if_else(Dx6 %in% SUD_Dx, Dx6,
-                                     if_else(Dx7 %in% SUD_Dx, Dx7,
-                                             if_else(Dx8 %in% SUD_Dx, Dx8,
-                                                     if_else(Dx9 %in% SUD_Dx, Dx9,
-                     if_else(Dx10 %in% SUD_Dx, Dx10,
-                             if_else(Dx11 %in% SUD_Dx, Dx11,
-                                     if_else(Dx12 %in% SUD_Dx, Dx12, "NotSUD"
-                                     )))))))))))))) 
-
-IPClaims_SummarySUD <- IPClaims_SummarySUD |>
-  mutate(CoOccuring = if_else(Elig_MHDx != "NotBH" & SUD_Dx != "NotSUD", 1, 0))
-
- write.csv(IPClaims_SummarySUD, "./data/output/VBPMeasurementValidation/IPClaims_SummarySUD.csv")
   
 ```
 
@@ -463,7 +443,7 @@ IPClaims_validation <- IPClaims_Summary |>
   select(MemberID,
          svccode)
 
-# write.csv(IPClaims_validation, "./data/output/VBPMeasurementValidation/IPClaims_Validation.csv")
+write.csv(IPClaims_validation, "./data/output/VBPMeasurementValidation/IPClaims_Validation.csv")
 
 ```
 
@@ -495,7 +475,7 @@ VBP_Unduplicated <- VBPQR_AllAPsCombined_Cleaned |>
   rename("MemberID" = `Member ID`) |> 
   count()
 
-# write.csv(VBP_Unduplicated, "./data/output/VBPMeasurementValidation/VBP_Unduplicated.csv")
+write.csv(VBP_Unduplicated, "./data/output/VBPMeasurementValidation/VBP_Unduplicated.csv")
 ```
 
 ***Claims***
@@ -508,7 +488,7 @@ IPClaims_Unduplicated <- IPClaims_validation |>
   group_by(MemberID) |> 
   count()
 
-# write.csv(IPClaims_Unduplicated, "./data/output/VBPMeasurementValidation/IPClaims_Unduplicated.csv")
+write.csv(IPClaims_Unduplicated, "./data/output/VBPMeasurementValidation/IPClaims_Unduplicated.csv")
 ```
 
 ***Merge VBPQR and IPClaims Data to One Table***
@@ -531,7 +511,7 @@ Validation_Matrix <-
          "claims" = n.y) |> 
   mutate(Match = if_else((is.na(VBP) | is.na(claims)), "NoMatch", "Match"))
 
-# write.csv(Validation_Matrix, "./data/output/VBPMeasurementValidation/ValidationMatrix.csv")
+write.csv(Validation_Matrix, "./data/output/VBPMeasurementValidation/ValidationMatrix.csv")
 ```
 
 ### Assess Model
@@ -561,7 +541,7 @@ Validation_Summary <- Validation_Matrix |>
   group_by(Match) |> 
   count()
 
-# write.csv(Validation_Summary, "./data/output/VBPMeasurementValidation/Validation_Summary.csv")
+write.csv(Validation_Summary, "./data/output/VBPMeasurementValidation/Validation_Summary.csv")
 
 ```
 
@@ -600,7 +580,7 @@ ValidatedVBPMembers <-
         all.x = TRUE) |>
   drop_na(Match)
 
-# write.csv(ValidatedVBPMembers,"./data/output/VBPMeasurementValidation/ValidatedVBPMembers.csv")
+write.csv(ValidatedVBPMembers,"./data/output/VBPMeasurementValidation/ValidatedVBPMembers.csv")
 
 ValMat_NoMatch <- 
    merge(x = ValMat_NoMatch,
@@ -609,7 +589,7 @@ ValMat_NoMatch <-
         all.x = TRUE) |>
   drop_na(Match)
 
-# write.csv(ValMat_NoMatch,"./data/output/VBPMeasurementValidation/ValMat_NoMatch.csv")
+write.csv(ValMat_NoMatch,"./data/output/VBPMeasurementValidation/ValMat_NoMatch.csv")
 
 MemberFollowUpList <- 
    merge(x = Validation_Matrix,
@@ -618,7 +598,9 @@ MemberFollowUpList <-
         all = TRUE) |>
   drop_na(Match)
 
-# write.csv(MemberFollowUpList,"./data/output/VBPMeasurementValidation/MemberFollowUpList.csv")
+write.csv(MemberFollowUpList,"./data/output/VBPMeasurementValidation/FUH7_MemberFollowUpList.csv")
+
+write.csv(MemberFollowUpList,"C:/Users/KGLtd/OneDrive - The NARBHA Institute/Documents - Data Force/Projects/AllianceIntranetSupport/data/FUH7_MemberFollowUpList.csv")
 ```
 
 ### Evaluation of Validated Data
@@ -681,19 +663,19 @@ ICD10Groupings <- read.csv("./data/dataModel/ICD10andBHGroupingsCombined.csv")
 
 # Create column with first found BHDx
 VMMwithDxGroupings <- ValidatedVBPMembers |> 
-  mutate(Elig_MHDx = if_else(PrimaryDiagnosis %in% SUD_Dx, PrimaryDiagnosis,
-                             if_else(Dx1 %in% SUD_Dx, Dx1,
-                                     if_else(Dx2 %in% SUD_Dx, Dx2,
-                                             if_else(Dx3 %in% SUD_Dx, Dx3,
-                                                     if_else(Dx4 %in% SUD_Dx, Dx4,
-                                                             if_else(Dx5 %in% SUD_Dx, Dx5,
-                                                                     if_else(Dx6 %in% SUD_Dx, Dx6,
-                                                                             if_else(Dx7 %in% SUD_Dx, Dx7,
-                                                                                     if_else(Dx8 %in% SUD_Dx, Dx8,
-                                                                                             if_else(Dx9 %in% SUD_Dx, Dx9,
-                                                                                                     if_else(Dx10 %in% SUD_Dx, Dx10,
-                                                                                                             if_else(Dx11 %in% SUD_Dx, Dx11,
-                                                                                                                     if_else(Dx12 %in% SUD_Dx, Dx12, "NotBH"                                                                             ))))))))))))))
+  mutate(Elig_MHDx = if_else(PrimaryDiagnosis %in% MH_Dx, PrimaryDiagnosis,
+                             if_else(Dx1 %in% MH_Dx, Dx1,
+                                     if_else(Dx2 %in% MH_Dx, Dx2,
+                                             if_else(Dx3 %in% MH_Dx, Dx3,
+                                                     if_else(Dx4 %in% MH_Dx, Dx4,
+                                                             if_else(Dx5 %in% MH_Dx, Dx5,
+                                                                     if_else(Dx6 %in% MH_Dx, Dx6,
+                                                                             if_else(Dx7 %in% MH_Dx, Dx7,
+                                                                                     if_else(Dx8 %in% MH_Dx, Dx8,
+                                                                                             if_else(Dx9 %in% MH_Dx, Dx9,
+                                                                                                     if_else(Dx10 %in% MH_Dx, Dx10,
+                                                                                                             if_else(Dx11 %in% MH_Dx, Dx11,
+                                                                                                                     if_else(Dx12 %in% MH_Dx, Dx12, "NotBH"                                                                             ))))))))))))))
 # Group by Dx
 # ValidatedVBPMembers |> group_by(Elig_MHDx) |> count()
 
@@ -707,11 +689,11 @@ VMMwithDxGroupings <- merge(
   by = "primaryDiagnosisSimplified"
 )
 
-# write.csv(VMMwithDxGroupings, "./data/output/VBPMeasurementValidation/ValidatedVBPMembers_withDxGrouping.csv")
+write.csv(VMMwithDxGroupings, "./data/output/VBPMeasurementValidation/ValidatedVBPMembers_withDxGrouping.csv")
 
 VMMbyDiagnosisGroupRange <- VMMwithDxGroupings |> group_by(DiagnosisGroupRange) |> count()
 
-# write.csv(VMMbyDiagnosisGroupRange, "./data/output/VBPMeasurementValidation/VMMbyDiagnosisGroupRange.csv")
+write.csv(VMMbyDiagnosisGroupRange, "./data/output/VBPMeasurementValidation/VMMbyDiagnosisGroupRange.csv")
 ```
 
 **Diagnostic Group Ranges**
@@ -735,7 +717,9 @@ Compliance <-
 
 colnames(Compliance)[6] <- "Gap_Status"
 #####
-# write.csv(Compliance, "./data/output/VBPMeasurementValidation/Compliance.csv")
+write.csv(Compliance, "./data/output/VBPMeasurementValidation/Compliance.csv")
+
+write.csv(Compliance, "C:/Users/RyanK/OneDrive - The NARBHA Institute/Documents - Data Force/Projects/AllianceIntranetSupport/data/Compliance.csv")
 ```
 
 -   `r Compliance |> filter(Gap_Status == "OPEN") |> nrow()` Non-Compliant
@@ -770,7 +754,7 @@ Comp_ChiSq <- Compliance |>
   # mutate(`0` = as.double(`0`),
   #        `1` = as.double(`1`))
 
-# write.csv(Comp_ChiSq, "./data/output/VBPMeasurementValidation/Comp_ChiSq.csv")
+write.csv(Comp_ChiSq, "./data/output/VBPMeasurementValidation/Comp_ChiSq.csv")
 ```
 
 **Chi Squared Test Result**
@@ -820,8 +804,6 @@ There a significant variance in the data indicated a disproportionate frequency 
 **In other words, the Alliance and its providers are being underrated by the HC Value Based Purchasing Quality Roster as evidenced by Health Choice Adjudicated Claims.**
 
 Further investigation into this data is required in order to validate measurement. Within the Member Follow Up List, only those cases identified as "Match" may be relied upon for validity. 
-
-# homelessness
 
 # Reviews
 
