@@ -1,0 +1,445 @@
+---
+title: "Value Based Purchasing Validation Model"
+subtitle: "Follow Up After Hospitalization"
+author: 
+  name: "John Ryan Kivela, MA"
+  email: "Ryan.Kivela@narbha.org"
+date: "September 1, 2023"
+format:
+  html:
+    theme: pulse
+    embed-resources: true
+    toc: true
+    toc-depth: 6
+    code-fold: true
+    footnotes-hover: true
+---
+
+# Introduction
+
+This is the new version...
+
+```{r}
+#| label: Setup
+#| include: false
+#| echo: false
+#| warning: false
+#| error: false
+
+## Load Libraries
+library(tidyverse)
+library(readxl)
+library(kableExtra)
+library(gt)
+library(scales)
+
+# Set up ODBC Connection
+# QRPTP01 <- DBI::dbConnect(odbc::odbc(),"AllianceData")
+
+# table for inline code
+InLineCode <- data.frame(
+  ReportDate = "08-23-2023",
+  MeasurementYear = "01-01-2023 - 12-31-2023",
+  ClaimsAdjudicatedThrough = "07-31-2023",
+  HEDISVersion = "My 2023",
+  var5 = "Text"
+)
+
+```
+
+# Import VBP Data
+
+::: panel-tabset
+
+## Description of the data
+
+## Code
+
+```{r}
+#| label: Import VBP Data
+#| include: true
+#| echo: true
+#| warning: false
+#| error: false
+
+# Import the unaltered VBP report, "Roster" sheet, as received from HCA
+vbp_cbi <- read_xlsx("./data/VBPReports/VBP 08.23.2023/94-2880847_Community_Bridges_HCA_BHH_VBP_Quality_Roster_20230823_0906.xlsx", sheet = "Roster")
+vbp_cpih  <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0215065_Change_Point_Integrated_Health_HCA_BHH_VBP_Quality_Roster_20230823_0857.xlsx", sheet = "Roster")
+vbp_lcbhc <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0250938_Little_Colorado_Behavioral_Health_HCA_BHH_VBP_Quality_Roster_20230823_0858.xlsx", sheet = "Roster")
+vbp_mmhc  <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0214457_Mohave_Mental_Health_HCA_BHH_VBP_Quality_Roster_20230823_0857.xlsx", sheet = "Roster")
+vbp_ph    <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0206928_Polara_Health_HCA_BHH_VBP_Quality_Roster_20230823_0856.xlsx", sheet = "Roster")
+vbp_sbhs  <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0290033_Southwest_Behavioral_Health_HCA_BHH_VBP_Quality_Roster_20230823_0858.xlsx", sheet = "Roster")
+vbp_shg   <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality_Roster_20230823_0856.xlsx", sheet = "Roster")
+vbp_tgc   <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality_Roster_20230823_0857.xlsx", sheet = "Roster")
+
+# Add variable called Provider_Shortname which is the Alliance Provider acronym
+vbp_cbi$Provider_Shortname <- "CBI"
+vbp_cpih$Provider_Shortname <- "CPIH"
+vbp_lcbhc$Provider_Shortname <- "LCBHC"
+vbp_mmhc$Provider_Shortname <- "MMHC"
+vbp_ph$Provider_Shortname <- "PH"
+vbp_sbhs$Provider_Shortname <- "SBHS"
+vbp_shg$Provider_Shortname <- "SHG"
+vbp_tgc$Provider_Shortname <- "TGC"
+
+# Bind the Details sheet from all providers into one table
+DataRaw_VBPQR_AllAPsCombined <- rbind(
+  vbp_cbi,
+  vbp_cpih,
+  vbp_lcbhc,
+  vbp_mmhc,
+  vbp_ph,
+  vbp_sbhs,
+  vbp_shg,
+  vbp_tgc
+)
+
+## write to csv, date of file = date of VBP QR report
+write.csv(DataRaw_VBPQR_AllAPsCombined, "./data/output/VBPMeasurementValidation_Complete_2023-08-23/2023-08-23_DataRaw_VBPQR_AllAPsCombined.csv")
+```
+
+:::
+
+## Transform and clean the data
+
+::: panel-tabset
+
+### Clean up the data
+
+### Code
+
+```{r}
+#| label: Clean VBP Data
+#| include: true
+#| echo: true
+#| warning: false
+#| error: false
+
+# create a safe copy of the original data
+VBPQR_AllAPsCombined_Cleaned <- DataRaw_VBPQR_AllAPsCombined
+
+# Filter out superfluous rows of nonsense data
+VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |>  
+  filter(`...2` != "NA")
+
+# Set column names to headers, which get imported on row 1 #5/2/23 - updated from "6" 
+colnames(VBPQR_AllAPsCombined_Cleaned) <- VBPQR_AllAPsCombined_Cleaned [1,] 
+
+# Remove the first row of data that was formerly the headers
+VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned[-1,]
+
+# 5/1/23 - Create SubMeasureID frm the first letters of the Measure variable
+VBPQR_AllAPsCombined_Cleaned$`SubMeasure ID` <- substr(VBPQR_AllAPsCombined_Cleaned$Measure, 1, 3)
+
+## Write to CSV
+# VBP Validation folder
+write.csv(VBPQR_AllAPsCombined_Cleaned, "./data/output/VBPMeasurementValidation/VBPQR_AllAPsCombined_Cleaned_complete_2023-08-23.csv")
+
+# Isolate member ID for the validation
+VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |> 
+  filter(`SubMeasure ID` == "FUH") |> 
+  select(`Member ID`)
+```
+
+### Visualize
+
+:::
+
+# Import Data
+
+## Enrollment Data
+
+::: panel-tabset
+
+## Description of Data
+
+This is enrollment data, compiled for various tables
+
+## Code
+## Enrollment Roster
+
+```{sql, connection = QRPTP01, output.var = "GM_Enrollments_AllACC"}
+#| label: AHCCCS Enrollments
+#| eval: true
+#| include: false
+#| echo: false
+#| warning: false
+#| error: false
+
+declare @AzACC int = narbha.dbo.ufn_GetIntLobIdFromLobName('ArizonaAcc', getdate());
+
+SELECT * 
+
+FROM GlobalMembers.dbo.Enrollments 
+
+WHERE lobid = @AzACC 
+  AND void = 0 
+  
+ORDER BY PrimaryId , EnrollmentDate DESC
+
+```
+
+## All AZ Enrollments Data
+
+```{sql, connection = QRPTP01, output.var = "GM_ALLAZ_Enrollments"}
+#| label: GM All AZ Enrollments
+#| eval: true
+#| include: false
+#| echo: false
+#| warning: false
+#| error: false
+
+SELECT * 
+
+FROM GlobalMembers.dbo.DailyMemberShipAllArizonaEnrollments
+
+WHERE void = 0 
+  
+ORDER BY PrimaryId
+```
+
+## All AZ Addresses Data
+
+```{sql, connection = QRPTP01, output.var = "GM_ALLAZ_Addresses"}
+#| label: GM All AZ Addresses
+#| eval: true
+#| include: false
+#| echo: false
+#| warning: false
+#| error: false
+
+SELECT * 
+
+FROM GlobalMembers.dbo.DailyMemberShipAllArizonaAddresses
+
+WHERE Void = 0 
+  
+```
+
+## Primary Assigned Clinic
+
+```{r}
+#| label: Enrollment
+#| eval: true
+#| include: false
+#| echo: false
+#| warning: false
+#| error: false
+
+
+# Identify Alliance Membership
+
+# Merge Enrollment files
+
+AllianceEnrolledMembers_Merge <-
+  merge(x = GM_Enrollments_AllACC,
+        y = Clients_Demographics_AllACC,
+        by = "PrimaryId",
+        all.x = TRUE)
+  
+AllianceEnrolledMembers_Merge <-  
+  AllianceEnrolledMembers_Merge |> 
+  select(
+    PrimaryId,
+    EnrollmentDate,
+    DisenrollmentDate,
+    DOB,
+    DOD
+  )
+
+AllianceEnrolledMembers_Merge <-
+  merge(x = AllianceEnrolledMembers_Merge,
+        y = GM_ALLAZ_Enrollments,
+        by = "PrimaryId",
+        all.x = TRUE)
+
+AllianceEnrolledMembers_Merge <-
+  AllianceEnrolledMembers_Merge |> 
+  select(
+    PrimaryId,
+    EnrollmentDate.x,
+    DisenrollmentDate.x,
+    DOB,
+    DOD,
+    BHHShortName
+  )
+
+AllianceEnrolledMembers_Merge <-
+  merge(x = AllianceEnrolledMembers_Merge,
+        y = GM_ALLAZ_Addresses,
+        by = "PrimaryId",
+        all.x = TRUE)
+
+AllianceEnrolledMembers_Merge <- 
+  AllianceEnrolledMembers_Merge |> 
+  select(
+    PrimaryId,
+    EnrollmentDate.x,
+    DisenrollmentDate.x,
+    DOB,
+    DOD,
+    BHHShortName,
+    ResCountyName
+  )
+
+# Vector of Alliance Provider Name
+Provider_ShortName <- (c("CBI", "CPIH", "EHS", "LCBHC", "MMHC", "SHG", "SBH", "TGC", "WYGC"))
+
+# Vector of NAZ Counties
+NAZ_Counties <- (c("Apache", "Coconino", "Mohave", "Navajo", "Yavapai"))
+
+# Trim extra spaces at end of rescountyname
+
+AllianceEnrolledMembers_Merge$ResCountyName <-
+  trimws(AllianceEnrolledMembers_Merge$ResCountyName)
+
+# Filter for The Alliance Providers and the Northern Counties
+
+AllianceEnrolledMembers <-
+  AllianceEnrolledMembers_Merge |> 
+  filter(BHHShortName %in% Provider_ShortName)
+
+AllianceEnrolledMembers <-
+  AllianceEnrolledMembers |> 
+  filter(ResCountyName %in% NAZ_Counties)
+
+# Filter out dead people (no offense intended)
+
+AllianceEnrolledMembers <-
+  AllianceEnrolledMembers |> 
+  filter(is.na(DOD))
+
+AllianceEnrolledMembers_PrimaryID <- AllianceEnrolledMembers$PrimaryId
+
+## Write to CSV
+ write.csv(AllianceEnrolledMembers, "./data/output/AllianceEnrolledMembers.csv")
+
+```
+
+:::
+
+## Claims Data
+::: panel-tabset
+
+## Description of the Data
+
+### Hedis data
+
+## Code
+
+```{r}
+#| label: Import HEDIS value set data
+#| eval: true
+#| include: false
+#| echo: false
+#| warning: false
+#| error: false
+
+# Import the Value Sets to Codes sheet from the MyHEDIS Value Set Directory
+MyHEDIS2023_AllValueSetsToCodes <- read_xlsx("./documents/M. HEDIS MY 2023 Volume 2 Value Set Directory 2023-03-31 - Copy.xlsx", sheet = "Value Sets to Codes")
+
+# Extract the inpatient value set
+ValueSetCodes_Inpatient <- 
+MyHEDIS2023_AllValueSetsToCodes |> 
+  filter(`Value Set Name` == "Inpatient Stay")
+  
+# Extract the associated code values as a vector
+ValueSetCodesList_Inpatient <- ValueSetCodes_Inpatient$Code
+
+# Extract the non acute inpatient value set
+ValueSetCodes_NonAcuteInpatient <- 
+MyHEDIS2023_AllValueSetsToCodes |> 
+  filter(`Value Set Name` == "Nonacute Inpatient")
+  
+# Extract the associated code values as a vector
+ValueSetCodesList_NonAcuteInpatient <- ValueSetCodes_NonAcuteInpatient$Code
+
+# Extract the Mental Illness value set
+ValueSetCodes_MentalIllness <- 
+MyHEDIS2023_AllValueSetsToCodes |> 
+  filter(`Value Set Name` == "Mental Illness")
+  
+# Extract the associated code values as a vector
+ValueSetCodesList_MentalIllness <- ValueSetCodes_MentalIllness$Code
+
+# Extract the non acute inpatient value set
+ValueSetCodes_IntentionalSelfHarm <- 
+MyHEDIS2023_AllValueSetsToCodes |> 
+  filter(`Value Set Name` == "Intentional Self-Harm")
+  
+# Extract the associated code values as a vector
+ValueSetCodesList_IntentionalSelfHarm <- ValueSetCodes_IntentionalSelfHarm$Code
+
+```
+
+### Claims Data
+
+```{sql, connection = QRPTP01, output.var = "Claims_ALLHCA"}
+#| label: IP Claims
+#| eval: true
+#| include: false
+#| echo: false
+#| warning: false
+#| error: false
+
+-- This is the code to extract IP Claims data from the HCA data warehouse
+
+-- Declare Date Range
+Declare @start as date = '01-01-2023'
+Declare @end as date = '12-31-2023'
+
+SELECT
+  PrimaryID,
+  AHCCCSID,
+  Icnno,
+  BegDate,
+  Svccode,
+  RA,
+  ProviderName,
+  AdmitDate,
+  DischargeDate,
+  PrimaryDiagnosis,
+  Dx1,
+  Dx2,
+  DX3,
+  Dx4,
+  Dx5,
+  DX6,
+  Dx7,
+  Dx8,
+  DX9,
+  Dx10,
+  Dx11,
+  DX12,
+  EncounterStatus,
+  EncounterStatusDate
+  
+FROM
+  claims.dbo.shcaVos
+
+WHERE EncounterStatus = 'AP'
+  AND EncounterStatusDate BETWEEN @start and @end
+  AND begDate >= @start
+
+```
+
+```{r}
+#| label: IP Claims Alliance
+#| eval: true
+#| include: false
+#| echo: false
+#| warning: false
+#| error: false
+
+Claims_ALLAlliance <-
+  Claims_ALLHCA |> 
+  filter(PrimaryID %in% AllianceEnrolledMembers_PrimaryID)
+
+## Write to CSV
+write.csv(Claims_ALLAlliance, "./data/input/Claims_AllAlliance_2023-08-23.csv")
+
+```
+
+:::
+
+
