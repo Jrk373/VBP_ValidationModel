@@ -65,23 +65,33 @@ InLineCode <- data.frame(
 
 # Import the unaltered VBP report, "Roster" sheet, as received from HCA
 vbp_cbi <- read_xlsx("./data/VBPReports/VBP 08.23.2023/94-2880847_Community_Bridges_HCA_BHH_VBP_Quality_Roster_20230823_0906.xlsx", sheet = "Roster")
+  # vbp_cbi <- vbp_cbi [,-1] 
+  # colnames(vbp_cbi) <- c("BCBSAZ Health Choice" ,"...2", "...3", "...4", "...5", "...6", "...7", "...8", "...9")
+  vbp_cbi$Provider_Shortname <- "CBI"
 vbp_cpih  <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0215065_Change_Point_Integrated_Health_HCA_BHH_VBP_Quality_Roster_20230823_0857.xlsx", sheet = "Roster")
+  vbp_cpih$Provider_Shortname <- "CPIH"
 vbp_lcbhc <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0250938_Little_Colorado_Behavioral_Health_HCA_BHH_VBP_Quality_Roster_20230823_0858.xlsx", sheet = "Roster")
+  vbp_lcbhc$Provider_Shortname <- "LCBHC"
 vbp_mmhc  <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0214457_Mohave_Mental_Health_HCA_BHH_VBP_Quality_Roster_20230823_0857.xlsx", sheet = "Roster")
+  vbp_mmhc$Provider_Shortname <- "MMHC"
 vbp_ph    <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0206928_Polara_Health_HCA_BHH_VBP_Quality_Roster_20230823_0856.xlsx", sheet = "Roster")
+  vbp_ph$Provider_Shortname <- "PH"
 vbp_sbhs  <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0290033_Southwest_Behavioral_Health_HCA_BHH_VBP_Quality_Roster_20230823_0858.xlsx", sheet = "Roster")
+  vbp_sbhs$Provider_Shortname <- "SBHS"
 vbp_shg   <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0207499_Spectrum_Health_Group_HCA_BHH_VBP_Quality_Roster_20230823_0856.xlsx", sheet = "Roster")
+  vbp_shg$Provider_Shortname <- "SHG"
 vbp_tgc   <-  read_xlsx("./data/VBPReports/VBP 08.23.2023/86-0223720_The_Guidance_Center_HCA_BHH_VBP_Quality_Roster_20230823_0857.xlsx", sheet = "Roster")
+  vbp_tgc$Provider_Shortname <- "TGC"
 
 # Add variable called Provider_Shortname which is the Alliance Provider acronym
-vbp_cbi$Provider_Shortname <- "CBI"
-vbp_cpih$Provider_Shortname <- "CPIH"
-vbp_lcbhc$Provider_Shortname <- "LCBHC"
-vbp_mmhc$Provider_Shortname <- "MMHC"
-vbp_ph$Provider_Shortname <- "PH"
-vbp_sbhs$Provider_Shortname <- "SBHS"
-vbp_shg$Provider_Shortname <- "SHG"
-vbp_tgc$Provider_Shortname <- "TGC"
+# vbp_cbi$Provider_Shortname <- "CBI"
+# vbp_cpih$Provider_Shortname <- "CPIH"
+# vbp_lcbhc$Provider_Shortname <- "LCBHC"
+# vbp_mmhc$Provider_Shortname <- "MMHC"
+# vbp_ph$Provider_Shortname <- "PH"
+# vbp_sbhs$Provider_Shortname <- "SBHS"
+# vbp_shg$Provider_Shortname <- "SHG"
+# vbp_tgc$Provider_Shortname <- "TGC"
 
 # Bind the Details sheet from all providers into one table
 DataRaw_VBPQR_AllAPsCombined <- rbind(
@@ -127,10 +137,15 @@ VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned |>
 colnames(VBPQR_AllAPsCombined_Cleaned) <- VBPQR_AllAPsCombined_Cleaned [1,] 
 
 # Remove the first row of data that was formerly the headers
-VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned[-1,]
+VBPQR_AllAPsCombined_Cleaned <- VBPQR_AllAPsCombined_Cleaned[-1,] |> 
+  rename("Provider_ShortName" = CBI)
 
 # 5/1/23 - Create SubMeasureID frm the first letters of the Measure variable
-VBPQR_AllAPsCombined_Cleaned$`SubMeasure ID` <- substr(VBPQR_AllAPsCombined_Cleaned$Measure, 1, 3)
+VBPQR_AllAPsCombined_Cleaned$`SubMeasure ID` <- substr(VBPQR_AllAPsCombined_Cleaned$Measure, 1, 3) 
+
+VBPQR_AllAPsCombined_Cleaned <-
+  VBPQR_AllAPsCombined_Cleaned |>  
+  filter(`SubMeasure ID` != "Mea")
 
 ## Write to CSV
 # VBP Validation folder
